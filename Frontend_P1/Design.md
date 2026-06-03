@@ -1,4 +1,5 @@
 ```markdown
+```
 # AI Interview Coach — Design System & UI Specification
 ### Stack (Frontend): React + Redux Toolkit + JavaScript + Tailwind CSS
 ### Inspiration: Hubtown.co.in (cinematic scroll, massive editorial typography, one idea per viewport)
