@@ -26,8 +26,9 @@
 14. [Security Considerations](#14-security-considerations)
 15. [Future Scalability](#15-future-scalability)
 16. [Development Standards](#16-development-standards)
-17. [Build Order](#17-build-order)
-
+17. [Environment Variables](#17-environment-variables)
+18. [Testing Strategy](#18-testing-strategy)
+19. [Build Order](#19-build-order)
 ---
 
 ## 1. High-Level Architecture
@@ -1468,11 +1469,316 @@ import Button from '../components/common/Button'
 import { useTimer } from '../hooks/useTimer'
 import { buildReportRoute } from '../constants/routes'
 ```
+---
+
+## 17. Environment Variables
+
+All environment variables are prefixed with `VITE_` as required by Vite's env exposure system. Never use `process.env` in this project — always use `import.meta.env`.
+
+### Variable Reference
+
+| Variable | Purpose | Default | Example |
+|---|---|---|---|
+| `VITE_API_BASE_URL` | Base URL for all Axios requests | *(none — required)* | `http://localhost:8080/api/v1` |
+| `VITE_APP_NAME` | Application display name | `AI Interview Coach` | `AI Interview Coach` |
+| `VITE_ENVIRONMENT` | Runtime environment identifier | `development` | `production` |
+| `VITE_ENABLE_ANALYTICS` | Feature flag — enables/disables analytics module | `true` | `false` |
+| `VITE_REPORT_POLL_INTERVAL` | Milliseconds between report status poll attempts | `3000` | `5000` |
+
+### Usage in Code
+
+```js
+// services/axiosInstance.js
+baseURL: import.meta.env.VITE_API_BASE_URL
+
+// Feature flag check
+const analyticsEnabled = import.meta.env.VITE_ENABLE_ANALYTICS === 'true'
+
+// Poll interval
+const POLL_INTERVAL = Number(import.meta.env.VITE_REPORT_POLL_INTERVAL) || 3000
+```
+
+### `.env.example`
+
+Commit this file to the repository. Never commit `.env`.
+
+```bash
+# .env.example
+# Copy this file to .env and fill in your values.
+
+# ─── Required ────────────────────────────────────────────────
+# Backend API base URL. No trailing slash.
+VITE_API_BASE_URL=http://localhost:8080/api/v1
+
+# ─── App Identity ─────────────────────────────────────────────
+VITE_APP_NAME=AI Interview Coach
+VITE_ENVIRONMENT=development
+
+# ─── Feature Flags ────────────────────────────────────────────
+# Set to "false" to disable the analytics module entirely.
+VITE_ENABLE_ANALYTICS=true
+
+# ─── Polling ──────────────────────────────────────────────────
+# Interval in milliseconds for report generation status polling.
+VITE_REPORT_POLL_INTERVAL=3000
+```
+
+### Rules
+
+- `.env` is listed in `.gitignore` — never committed.
+- `.env.example` is committed with placeholder/default values — always kept up to date.
+- Boolean flags are strings (`"true"` / `"false"`). Always compare with `=== 'true'`, never cast directly to boolean.
+- `VITE_API_BASE_URL` has no default — the app must fail loudly if it is missing.
 
 ---
 
-## 17. Build Order
+## 18. Testing Strategy
 
+**Testing Stack:** Vitest + React Testing Library
+
+Vitest is chosen for its native Vite integration (zero config, same transform pipeline as the app). React Testing Library enforces testing behavior over implementation.
+
+### Testing Folder Structure
+src/
+└── tests/
+├── unit/
+│   ├── reducers/          # Redux slice reducer tests
+│   │   ├── authSlice.test.js
+│   │   ├── interviewSlice.test.js
+│   │   ├── reportSlice.test.js
+│   │   └── uiSlice.test.js
+│   ├── utils/             # Pure utility function tests
+│   │   ├── tokenUtils.test.js
+│   │   ├── errorUtils.test.js
+│   │   └── scoreUtils.test.js
+│   └── hooks/             # Custom hook tests
+│       ├── useTimer.test.js
+│       └── useScrollReveal.test.js
+├── integration/           # Multi-layer flow tests
+│   ├── loginFlow.test.jsx
+│   ├── protectedRoute.test.jsx
+│   ├── interviewSubmission.test.jsx
+│   └── reportLoading.test.jsx
+└── mocks/                 # Shared test utilities
+├── handlers.js        # MSW request handlers
+├── server.js          # MSW server setup
+├── store.js           # Pre-configured test Redux store
+└── fixtures/          # Static test data
+├── user.js
+├── interview.js
+└── report.js
+
+
+### Unit Testing
+
+Unit tests cover pure logic in isolation: reducers, selectors, utility functions, and hooks.
+
+**Redux Reducer Tests**
+
+```js
+// __tests__/unit/reducers/interviewSlice.test.js
+import interviewReducer, {
+  saveAnswer,
+  setCurrentIndex,
+  resetInterview,
+} from '../../../features/interview/interviewSlice'
+
+describe('interviewSlice reducers', () => {
+  it('saves an answer by questionId', () => {
+    const initial = { answers: {} }
+    const next = interviewReducer(initial, saveAnswer({ questionId: 'q1', answer: 'My answer' }))
+    expect(next.answers['q1']).toBe('My answer')
+  })
+
+  it('advances currentIndex', () => {
+    const initial = { currentIndex: 0 }
+    const next = interviewReducer(initial, setCurrentIndex(1))
+    expect(next.currentIndex).toBe(1)
+  })
+
+  it('resets interview state fully', () => {
+    const dirty = { sessionId: 'abc', currentIndex: 3, answers: { q1: 'test' } }
+    const next = interviewReducer(dirty, resetInterview())
+    expect(next.sessionId).toBeNull()
+    expect(next.currentIndex).toBe(0)
+    expect(next.answers).toEqual({})
+  })
+})
+```
+
+**Utility Function Tests**
+
+```js
+// __tests__/unit/utils/tokenUtils.test.js
+import { isTokenExpired } from '../../../utils/tokenUtils'
+
+describe('isTokenExpired', () => {
+  it('returns true for an expired token', () => {
+    const expiredToken = generateJwt({ exp: Math.floor(Date.now() / 1000) - 60 })
+    expect(isTokenExpired(expiredToken)).toBe(true)
+  })
+
+  it('returns false for a valid token', () => {
+    const validToken = generateJwt({ exp: Math.floor(Date.now() / 1000) + 3600 })
+    expect(isTokenExpired(validToken)).toBe(false)
+  })
+})
+```
+
+**Hook Tests**
+
+```js
+// __tests__/unit/hooks/useTimer.test.js
+import { renderHook, act } from '@testing-library/react'
+import { useTimer } from '../../../hooks/useTimer'
+
+describe('useTimer', () => {
+  it('increments elapsed seconds', () => {
+    vi.useFakeTimers()
+    const { result } = renderHook(() => useTimer())
+    act(() => { vi.advanceTimersByTime(3000) })
+    expect(result.current.elapsed).toBe(3)
+    vi.useRealTimers()
+  })
+})
+```
+
+### Component Testing
+
+Component tests verify that the correct UI renders for a given state and that user interactions trigger the correct dispatches.
+
+**Login Form**
+
+```jsx
+// __tests__/integration/loginFlow.test.jsx
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { Provider } from 'react-redux'
+import { MemoryRouter } from 'react-router-dom'
+import { setupStore } from '../mocks/store'
+import Login from '../../pages/Login'
+
+describe('Login page', () => {
+  it('renders email and password fields', () => {
+    render(
+      <Provider store={setupStore()}><MemoryRouter><Login /></MemoryRouter></Provider>
+    )
+    expect(screen.getByPlaceholderText(/email/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument()
+  })
+
+  it('disables submit button while request is in flight', async () => {
+    // ... setup MSW handler with delayed response
+    fireEvent.click(screen.getByRole('button', { name: /initiate/i }))
+    expect(screen.getByRole('button')).toBeDisabled()
+  })
+})
+```
+
+**QuestionPanel**
+
+```jsx
+// Verify question text renders at correct sequence number
+// Verify SUBMIT RESPONSE button is present
+// Verify textarea accepts input
+// Verify AI loader renders when isAiCompiling is true
+```
+
+**Report Components**
+
+```jsx
+// MacroVerdict: verify score and summary text render from fixture data
+// DiagnosticsPanel: verify both columns render the correct number of items
+// QuestionBreakdown: verify each sequence renders aiEvaluation and correctiveAction
+```
+
+### Integration Testing
+
+Integration tests wire together the Redux store, MSW API mocks, and React components to verify complete user flows.
+
+**Login Flow**
+Render Login page with real store
+Fill email + password
+MSW intercepts POST /auth/login → returns { token, user }
+Assert: store.auth.isAuthenticated === true
+Assert: navigate called with '/'
+
+**Protected Route Flow**
+Render ProtectedRoute wrapping a dummy component
+Store state: isAuthenticated = false
+Assert: redirected to /login
+Update store: isAuthenticated = true
+Assert: protected content renders
+
+**Interview Submission Flow**
+Render Simulation page with a seeded sessionId
+MSW: GET /interviews/:id/questions → returns fixture questions
+Assert: first question renders
+User types answer → fireEvent
+User clicks SUBMIT RESPONSE
+MSW: POST /interviews/:id/answers → 200 OK
+Assert: currentIndex advances in store
+Assert: AiCompilingLoader appears then disappears
+
+**Report Loading Flow**
+Render Report page with sessionId
+MSW: GET /reports/:id → returns fixture report
+Assert: overall score renders
+Assert: strengths list renders
+Assert: question breakdown timeline renders
+### Critical Test Coverage Checklist
+
+The following flows **must** have integration test coverage before any production deployment:
+
+| Flow | Test File | Priority |
+|---|---|---|
+| Authentication (login + token set) | `loginFlow.test.jsx` | P0 |
+| Session Recovery on mount | `sessionRecovery.test.jsx` | P0 |
+| Protected route redirect | `protectedRoute.test.jsx` | P0 |
+| Interview creation + navigation | `interviewSubmission.test.jsx` | P0 |
+| Answer submission per question | `interviewSubmission.test.jsx` | P0 |
+| Interview completion → report redirect | `interviewSubmission.test.jsx` | P0 |
+| Report fetch + render | `reportLoading.test.jsx` | P0 |
+| Report polling on pending state | `reportLoading.test.jsx` | P1 |
+| Analytics data fetch + render | `analyticsFlow.test.jsx` | P1 |
+| Profile update + save | `profileUpdate.test.jsx` | P1 |
+| Logout + credential clear | `loginFlow.test.jsx` | P0 |
+
+### MSW Setup Pattern
+
+```js
+// __tests__/mocks/handlers.js
+import { http, HttpResponse } from 'msw'
+import { userFixture, reportFixture } from './fixtures'
+
+export const handlers = [
+  http.post('/auth/login', () => {
+    return HttpResponse.json({ token: 'mock-token', user: userFixture })
+  }),
+  http.get('/reports/:sessionId', ({ params }) => {
+    return HttpResponse.json({ ...reportFixture, sessionId: params.sessionId })
+  }),
+  // ... all critical endpoints
+]
+
+// __tests__/mocks/server.js
+import { setupServer } from 'msw/node'
+import { handlers } from './handlers'
+export const server = setupServer(...handlers)
+```
+
+```js
+// vitest.setup.js (root level)
+import { beforeAll, afterAll, afterEach } from 'vitest'
+import { server } from './__tests__/mocks/server'
+beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
+```
+
+---
+
+
+## 19. Build Order
 ### Phase 1 — Foundation & Authentication
 
 **Goal:** Working app shell. Users can register and log in.
