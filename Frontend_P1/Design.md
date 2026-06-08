@@ -1,880 +1,584 @@
-```markdown
-```
-# AI Interview Coach — Design System & UI Specification
-### Stack (Frontend): React + Redux Toolkit + JavaScript + Tailwind CSS
-### Inspiration: Hubtown.co.in (cinematic scroll, massive editorial typography, one idea per viewport)
-
----
-## Product Story
-
-AI Interview Coach is a flight simulator for technical interviews.
-
-Users arrive with a job description and leave with confidence.
-
-The experience should feel like:
-
-1. Preparing for an important interview
-2. Sitting across from a senior engineer
-3. Receiving honest but constructive feedback
-4. Tracking measurable improvement over time
-
-The application should prioritize focus and confidence over productivity dashboard aesthetics.
-
-Every screen should reinforce one question:
-
-"Am I ready for this interview?"
-
-## Visual References
-
-**Reference Website:**
-https://hubtown.co.in
-
-**Key inspiration elements:**
-* Massive editorial typography
-* Cinematic scrolling
-* Large whitespace
-* Premium card layouts
-* Minimal navigation
-* One concept per viewport
-* Smooth transitions
+# AI Interview Coach — Architectural Design System & UI Specification
+### Stack: React + Redux Toolkit + React Router DOM + Tailwind CSS
+### Aesthetic Target: 40% Hubtown | 30% Apple Event | 20% Stripe Press | 10% Sci-Fi Simulation Room
 
 ---
 
-## Design Vision
+## 0. Product First Rule
 
-Build a premium, cinematic interview simulation platform.
+> When visual spectacle conflicts with interview effectiveness,  
+> **interview effectiveness always wins.**
 
-Every screen should feel like entering a real technical interview environment — calm, focused, high-stakes. The aesthetic draws from Hubtown's storytelling scroll: **one bold idea per viewport**, large text that breathes, smooth transitions between states.
-
-**The feeling:**
-> "This is the closest thing to a real technical interview. Before the real interview."
-
-**Personality words:**
-* Cinematic
-* Editorial
-* Focused
-* Premium
-* Intelligent
-* Trustworthy
-
-**Avoid:**
-* Gaming aesthetics
-* Neon / gradient overload
-* Cluttered dashboards
-* Busy animations
+The application is a career tool first and a visual experience second.  
+This rule prevents future AI generations from becoming too artistic at the cost of usability.
 
 ---
 
-## AI Personality
+## 1. Design Vision & Philosophy
 
-The AI interviewer should feel:
-* Professional
-* Encouraging
-* Honest
-* Senior Engineer level
+The AI Interview Coach is not a productivity tool; it is a **premium flight simulator for your career.**
 
-**Avoid:**
-* Overly robotic language
-* Excessive praise
-* Generic feedback
+We do not think in "pages" (Dashboards, Analytics, Profiles). We think in **experiences** (Simulation Archive, Readiness Report, Operator Identity). Every interaction is a meticulously crafted scene.
+
+**The Core Directives:**
+
+- **The Scroll Narrative:** The experience unfolds chronologically like a film, not a filing cabinet. One bold idea per viewport.
+- **The Hubtown Contrast Shift:** We use dramatic lighting changes to signal state changes. The simulation happens in a dark, atmospheric chamber. The verdict is delivered in a stark, brightly lit icy-blue environment.
+- **Atmospheric & Luxury:** The interface must feel expensive, serious, and high-stakes.
+- **Desktop-First Architecture:** The experience is engineered for the primary medium of interviews: the laptop/desktop screen.
 
 ---
 
-## Color System
+## 2. Forbidden UI Elements
 
-```css
-/* Tailwind custom config — tailwind.config.js */
+To maintain the architectural, storytelling aesthetic, the following elements are **STRICTLY PROHIBITED:**
 
-colors: {
-  background:   '#F8F8F6',   /* Off-white page bg */
-  surface:      '#FFFFFF',   /* Cards, panels */
-  border:       '#E5E7EB',   /* Dividers */
+- Generic SaaS dashboards
+- KPI cards & statistic grids
+- Bootstrap-style layouts
+- Dense sidebars
+- Multiple competing CTAs
+- Colorful charts & glassmorphism
+- Rounded modern startup UI
+- Standard admin templates
 
-  ink:          '#111111',   /* Primary text, primary button */
-  muted:        '#6B7280',   /* Secondary text, captions */
-  faint:        '#F3F4F6',   /* Subtle fills, hover bg */
+---
 
-  ai:           '#2563EB',   /* AI accent — question cards, AI badge */
-  score:        '#4F46E5',   /* Score ring, readiness % */
-  success:      '#16A34A',   /* Strengths section */
-  warning:      '#F59E0B',   /* Improvements section */
-  danger:       '#DC2626',   /* Errors, low score */
+## 3. Visual References
+
+Do not reference standard UI kits. Study the architectural spacing, typography scaling, and motion physics of the following web experiences:
+
+- **Hubtown.co.in** — Deep dark modes, dramatic lighting, massive editorial contrast shifts
+- **Apple Event Landing Pages** — Cinematic transitions, hardware-level precision
+- **Stripe Press** — Editorial layouts, exquisite typography, minimalist navigation
+
+---
+
+## 4. Color System
+
+The palette is extremely constrained to maximize contrast and architectural framing.
+
+```javascript
+// tailwind.config.js - Core Palette
+module.exports = {
+  theme: {
+    colors: {
+      /* The Simulation Chamber (Dark Mode) */
+      abyss:      '#050B14',   // Deep atmospheric architectural dark background
+      panel:      '#0A121F',   // Slightly elevated floating elements
+      frame:      '#1A2436',   // Geometric framing lines / subtle borders
+
+      /* The Verdict Environment (Light Mode) */
+      icyBlue:    '#D5E0FF',   // The Hubtown signature overlay background
+      ink:        '#000000',   // Massive typography on icy backgrounds
+
+      /* Typography */
+      pureWhite:  '#FFFFFF',   // Primary text in the abyss
+      steel:      '#8BA0B8',   // Muted text, metadata, subtle controls
+
+      /* AI Core & Accents */
+      neonBlue:   '#0088FF',   // Subtle glowing accents for AI activity
+      success:    '#10B981',   // Reserved strictly for positive feedback flags
+      warning:    '#EF4444',   // Reserved strictly for critical improvement flags
+      danger:     '#DC2626',   // Critical errors
+    }
+  }
 }
-
 ```
 
-**Usage rules:**
+**Usage Rules:**
 
-* Page backgrounds always use `background` (#F8F8F6) — never pure white
-
-
-* Cards always use `surface` (#FFFFFF) with a `border` border
-
-
-* The `ai` blue is reserved exclusively for AI-generated content indicators
-
-
-* Black (`ink`) is the only button primary color — no colored primary buttons
-
-
+| Context | Background | Text |
+|---|---|---|
+| Dark Mode (Default) | `abyss` | `pureWhite` |
+| Light Mode (Reports / Menus) | `icyBlue` | `ink` (massive) |
+| AI Activity Accent | — | `neonBlue` (primary actions only) |
+| Positive Feedback | — | `success` (strictly reserved) |
+| Critical Flag | — | `warning` (strictly reserved) |
 
 ---
 
-## Typography
+## 5. Typography System
 
-
+Typography is the primary structural element. We use massive editorial scaling.
 
 ```css
 /* Font: Inter — import in index.html */
-/* Fallback: Plus Jakarta Sans */
-
-font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
-
+font-family: 'Inter', sans-serif;
 ```
 
-### Scale (Tailwind classes)
-
-
-
-| Role | Size | Weight | Class |
-| --- | --- | --- | --- |
-| Hero | 72px | 800 | `text-7xl font-extrabold` |
-| H1 | 56px | 700 | `text-6xl font-bold` |
-| H2 | 40px | 700 | `text-4xl font-bold` |
-| H3 | 28px | 600 | `text-3xl font-semibold` |
-| Body | 18px | 400 | `text-lg font-normal` |
-| Small | 14px | 400 | `text-sm font-normal` |
-| Caption | 12px | 400 | `text-xs font-normal` |
-
-### Typography rules
-
-
-
-* Headings: tight letter spacing (`tracking-tight`)
-
-
-* Hero text: extra-tight (`tracking-tighter`)
-
-
-* Body: `leading-relaxed` for comfortable reading
-
-
-* Max reading width: `max-w-2xl` (800px)
-
-
-* Never use decorative or display fonts
-
-
+| Role | Size | Weight | Tailwind Class |
+|---|---|---|---|
+| **Hero / Score** | 120px+ | 900 | `text-[120px] font-black tracking-tighter leading-none` |
+| **Headline** | 72px | 800 | `text-7xl font-extrabold tracking-tight leading-none` |
+| **Scene Focus** | 48px | 700 | `text-5xl font-bold tracking-tight` |
+| **Body** | 24px | 400 | `text-2xl font-normal leading-relaxed text-steel` |
+| **Standard** | 18px | 400 | `text-lg font-normal` |
+| **Metadata** | 12px | 500 | `text-xs font-medium tracking-widest uppercase text-steel` |
 
 ---
 
-## Spacing System
+## 6. Motion Philosophy & Micro-interactions
 
-
-
-```text
-Section vertical padding:   py-28 (112px) md:py-36 (144px)
-Card padding:               p-8 (32px)
-Element gap:                gap-6 (24px)
-Micro gap:                  gap-3 (12px)
-Container max width:        max-w-7xl (1280px) with mx-auto px-6
-
-```
+- **No Bounce:** Absolutely no spring animations. Gravity is heavy; motion is deliberate.
+- **Scroll Triggering:** Content reveals itself as it enters the viewport (fading up slowly over 800ms).
+- **The AI Glow:** When the AI is generating, the `neonBlue` accent should pulse with a slow, breathing opacity shift.
 
 ---
 
-## Component Library
-
-
+## 7. Component Library
 
 ### Buttons
 
-
-
 ```jsx
-/* Primary — black pill */
-<button className="bg-ink text-white px-8 py-3 rounded-full font-medium 
-  hover:scale-[1.02] hover:opacity-90 transition-all duration-200">
-  Start Mock Interview
+/* Primary Cinematic Button — Glowing border */
+<button className="border border-neonBlue/40 text-pureWhite px-10 py-4 uppercase tracking-widest text-sm
+  hover:bg-neonBlue/10 hover:shadow-[0_0_30px_rgba(0,136,255,0.2)] transition-all duration-500">
+  Enter The Simulator
 </button>
 
-/* Secondary — outlined */
-<button className="border border-ink text-ink px-8 py-3 rounded-full font-medium
-  hover:bg-faint transition-all duration-200">
-  Watch Demo
+/* Secondary Cinematic Button — Architectural Outline */
+<button className="border border-frame text-steel px-10 py-4 uppercase tracking-widest text-sm
+  hover:border-pureWhite hover:text-pureWhite transition-all duration-300">
+  Return to Landing
 </button>
 
-/* Ghost */
-<button className="text-muted hover:text-ink transition-colors duration-200">
-  Skip
+/* Light Mode Editorial Button — Brutalist Block */
+<button className="bg-ink text-icyBlue px-10 py-4 font-bold uppercase tracking-widest text-sm
+  hover:bg-black/80 transition-all duration-300">
+  View The Verdict
 </button>
-
 ```
 
-### Cards
+### CTA Standardization
 
+All calls-to-action follow this hierarchy strictly:
 
+| Context | CTA Label |
+|---|---|
+| Landing page (first entry) | `ENTER THE SIMULATOR` |
+| Anywhere else | `NEW INTERVIEW` |
+| Within simulation | `SUBMIT RESPONSE` |
+| From report / archive | `VIEW THE VERDICT` |
+
+### Loading States (The AI Atmosphere)
 
 ```jsx
-/* Standard card */
-<div className="bg-surface border border-border rounded-2xl p-8
-  hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-</div>
+/* AI Compiling Sequence — Full Screen or Panel Center */
+<div className="flex flex-col items-center justify-center gap-6">
 
-/* AI-tagged card (used for question cards) */
-<div className="bg-surface border border-ai/20 rounded-2xl p-8
-  ring-1 ring-ai/10">
-  <span className="text-xs font-medium text-ai bg-ai/10 px-2 py-1 rounded-full">
-    AI Generated
-  </span>
-</div>
-
-```
-
-### Input / Textarea
-
-
-
-```jsx
-<textarea className="w-full bg-faint border border-border rounded-xl p-4
-  text-ink placeholder:text-muted resize-none
-  focus:outline-none focus:ring-2 focus:ring-ai/30 focus:border-ai/50
-  transition-all duration-200">
-</textarea>
-
-```
-
-### Badge
-
-
-
-```jsx
-/* Status badges */
-<span className="text-xs font-medium px-3 py-1 rounded-full bg-success/10 text-success">
-  Strong Answer
-</span>
-<span className="text-xs font-medium px-3 py-1 rounded-full bg-warning/10 text-warning">
-  Needs Work
-</span>
-
-```
-
----
-
-## Motion Philosophy
-
-* Slow premium transitions
-* Fade and reveal content
-* Scroll-triggered animations
-* Text reveal effects
-* Cards lift subtly on hover
-
-**Avoid:**
-
-* Bounce animations
-* Excessive parallax
-* Flashy effects
-
-### Micro-interactions
-
-
-
-```css
-/* Global transition defaults */
-transition-all duration-200   /* hover states */
-transition-all duration-300   /* page elements, modals */
-
-/* Hover elevation */
-hover:-translate-y-0.5 hover:shadow-md
-
-/* Button press */
-active:scale-[0.98]
-
-/* Skeleton loader */
-animate-pulse bg-faint rounded-xl
-
-```
-
----
-
-## Page Specifications
-
-
-
----
-
-### 1. Home Page (`/`)
-
-
-
-**Concept:** Hubtown-style cinematic scroll. One big idea per section. The new interview input lives front and center.
-
-#### Section 1 — Hero (full viewport height)
-
-
-
-```text
-Layout: Two column on desktop, stacked on mobile
-Left (55%): 
-  - Eyebrow: small caps label "AI Interview Coach"
-  - Hero headline (72px bold, tight):
-      "Practice Before The 
-       Interview That Matters."
-  - Subtext (18px muted):
-      "Turn any job description into a realistic 
-       AI-powered technical interview and receive 
-       detailed feedback instantly."
-  - Two CTA buttons: [Start Mock Interview] [Watch Demo]
-
-Right (45%):
-  - The main interview input card (see below ↓)
-  - Below it: 2–3 recent session cards in floating style
-
-```
-
-#### The Interview Input Card (Hero Right)
-
-
-
-```text
-Style: White card, rounded-2xl, soft shadow, border
-  
-Contents:
-  - Label: "What role are you preparing for?"
-  - Textarea: "Paste job description here..."
-    (min-height: 160px, bg-faint, rounded-xl)
-  - Row: [Upload JD button (ghost)] + [Generate Questions →]
-  - AI thinking state (when loading):
-      Animated dots + text: "Analyzing role requirements..."
-
-```
-
-#### Recent Session Cards (Floating Below Input)
-
-
-
-```text
-3 cards, slightly overlapping or offset vertically (floating style)
-Each card:
-  - Company / Role name
-  - Score badge (e.g. 84/100 in score purple)
-  - Date
-  - Subtle hover lift
-  - Width: ~280px, compact height
-  
-Label above: "Continue where you left off"
-
-```
-
-Tailwind layout for floating cards:
-
-```jsx
-<div className="relative mt-4 flex flex-col gap-2">
-  
-  <div className="bg-surface border border-border rounded-xl px-5 py-4
-    hover:shadow-md hover:-translate-y-0.5 transition-all duration-200
-    flex justify-between items-center">
-    <div>
-      <p className="text-sm font-medium text-ink">Frontend Engineer @ Stripe</p>
-      <p className="text-xs text-muted">2 days ago</p>
-    </div>
-    <span className="text-sm font-semibold text-score">84/100</span>
+  <div className="w-16 h-16 rounded-full border border-neonBlue/30 bg-neonBlue/10
+    shadow-[0_0_50px_rgba(0,136,255,0.2)] animate-pulse flex items-center justify-center">
+    <div className="w-8 h-8 rounded-full bg-neonBlue/50 animate-ping"></div>
   </div>
+
+  <div className="text-neonBlue text-sm tracking-[0.3em] uppercase font-bold animate-pulse">
+    Compiling Next Scenario...
+  </div>
+
 </div>
-
-```
-
-#### Section 2 — Trust Metrics
-
-
-
-```text
-4 large number stats in a row:
-  10,000+   Practice Sessions
-  500+      Job Roles Supported
-  < 5s      Question Generation
-  Instant   AI Feedback
-
-Style: Large number in 56px bold ink, label in 14px muted below
-Divider lines between each stat
-
-```
-
-#### Section 3 — How It Works
-
-
-
-```text
-Hubtown-style: 3 large numbered steps, one per row, very spacious
-
-01  Paste Job Description
-    Upload or paste the target role's JD.
-
-02  Take the Interview
-    Answer AI-generated technical questions.
-
-03  Get Detailed Feedback
-    Receive scoring, strengths, and improvement tips.
-
-Typography: Step number in 120px ultra-light gray (decorative)
-            Title in 40px bold
-            Body in 18px muted
-
-```
-
-#### Section 4 — Feature Grid
-
-
-
-```text
-2x2 card grid, generous gap
-
-1. Dynamic Question Generation
-   "Questions built from actual job requirements — not generic lists."
-
-2. AI Evaluation Engine
-   "Expert-level analysis on every answer you submit."
-
-3. Readiness Scoring
-   "Know your interview preparedness with a precise readiness score."
-
-4. Session History
-   "Track your growth across multiple practice sessions."
-
-Card style: white, border, rounded-2xl, p-8
-Icon: Simple line icon (Heroicons outline) top-left
-
 ```
 
 ---
 
-### 2. Login Page (`/login`)
+## 8. Page Specifications (The Narrative)
 
+### A. The Landing Narrative (`/`)
 
+The homepage is a linear, scroll-driven story focused on the methodology. Each scene occupies exactly 100vh. No fake statistics.
 
-```text
-Layout: Centered card on background
+**Scene 1: The Core**
+- Background: `bg-abyss`
+- Centerpiece: A perfectly centered, floating AI Core (holographic cube or pulsating neural sphere).
+- Headline: `PRACTICE BEFORE THE INTERVIEW THAT MATTERS.` (`text-pureWhite`)
+- Action: `[ ENTER THE SIMULATOR ]` (Neon border button)
 
-Card: max-w-md, centered, white, rounded-2xl, p-10, border
+**Scene 2: The Method**
+- Visual: Entire viewport. Immense, dominating typography vertically centered.
+- Typography: `MASTER THE INTERVIEW.` (120px, `pureWhite`, vertically centered)
 
-Contents:
-  - Logo / wordmark top center
-  - H2: "Welcome back."
-  - Subtext: "Sign in to continue your interview prep."
-  - Email input
-  - Password input
-  - [Sign In] button (full width, black pill)
-  - Divider: "or"
-  - [Continue with Google] (outlined, full width)
-  - Footer: "Don't have an account? Sign up"
+**Scene 3: Step One**
+- Typography: Stacked on the left — `01 / ANALYZE`
+- Body Copy: "Supply the role requirements. Our intelligence analyzes the specific tech stack and behavioral expectations to craft a bespoke interview scenario that mirrors reality." (24px, `steel`)
+- Visual: Right side fades in a glowing architectural wireframe of the input panel.
 
-Minimal. No sidebars. No imagery.
+**Scene 4: Step Two**
+- Typography: Stacked on the left — `02 / SIMULATE`
+- Body Copy: "Engage in a dynamic back-and-forth. The intelligence adapts to your answers, probing deeper on weak points just like a real hiring manager."
+- Visual: A question panel animates in, illuminated by the `neonBlue` AI glow.
 
-```
+**Scene 5: Step Three**
+- Typography: Stacked on the left — `03 / ASSESS`
+- Body Copy: "Receive a comprehensive readiness score, actionable critiques, and specific suggestions for improving your technical communication."
+- Visual: An abstract representation of telemetry and data lines.
+
+**Scene 6: The Verdict**
+- Visual: Scroll crosses a threshold; screen flashes dramatically from `abyss` to `icyBlue`.
+- Typography: `RECEIVE THE VERDICT` (Massive `ink`)
+- Action: `[ ENTER THE SIMULATOR ]` (Solid ink block)
 
 ---
 
-### Dashboard (/dashboard)
-```text
+### B. The Simulation Chamber (`/simulation/:sessionId`)
 
-Hero Section:
-- Welcome back, {User Name}- Current readiness score
-- Resume last interview button
+**Vibe:** High-stakes, dark, focused. Maximum concentration.
 
-Recent Sessions:
-- Horizontal cards
-- Score badges
-- Quick resume
-
-Performance Snapshot:
-- Average score
-- Interviews completed
-- Improvement trend
-
-Recommended Practice:
-- React
-- Spring Boot
-- System Design
-
-Primary CTA:
-[Start New Mock Interview]
----
 ```
-### 4. Questions Page (`/interview/:sessionId`)
-
-
-
-Most important screen. Maximum focus.
-
-```text
-Layout: Centered single column, max-w-2xl, no sidebar
-Background: #F8F8F6 (slightly off-white — feels like an exam room)
+Layout: Centered single column, max-w-3xl.
+Background: bg-abyss. Geometric framing lines subtly divide the screen.
 
 Top bar:
-  - Left: Logo (small, minimal)
-  - Center: Progress bar (thin, full width, ai blue fill)
-    "Question 3 of 8"
-  - Right: Timer (if enabled) + [End Session] ghost button
+  - Left: Minimalist timer in text-steel.
+  - Center: Thin neonBlue line expanding across the top edge (Progress).
+  - Right: [ RETURN TO LANDING ] (Secondary cinematic button, border-frame).
 
-Main Question Card:
-  - AI badge: "AI Generated"
-  - Question number: "03 / 08" in large muted type
-  - Question text: H2 size (40px), bold, ink color
-  - Difficulty badge: Easy / Medium / Hard
-  - Estimated time: "~3 min"
+The Focal Element (Question Panel):
+  - bg-panel with glowing neonBlue border.
+  - Question Number: "SEQUENCE 03 / 08" (Metadata text).
+  - Question Text: 40px, bold, pureWhite.
 
-Answer Area:
-  - Large textarea, bg-faint, rounded-xl
-  - Placeholder: "Type your answer here..."
-  - Bottom row:
-      Left: Character count (text-xs muted)
-      Right: Autosave indicator ("Saved ✓" in success green)
+Input Area:
+  - Massive, borderless textarea feeling like writing on glass.
+  - Bottom Right: "SYNCED ✓" (success color).
 
-Action row:
-  - [← Previous] ghost
-  - [Submit Answer →] black pill (primary)
+Action Row (Bottom):
+  - Left: [ ← PREVIOUS ] (Ghost text, text-steel hover:text-pureWhite)
+  - Right: [ SUBMIT RESPONSE → ] (Primary neon border button)
 
-Loading state (between questions):
-  - Skeleton card pulse animation
-  - "Preparing next question..." text
-
+Loading State (Between questions):
+  - Panel dissolves smoothly.
+  - Replaced by the pulsating neural core and text: "COMPILING NEXT SCENARIO..." or "ANALYZING RESPONSE..."
 ```
 
 ---
 
-### 5. Feedback Page (`/feedback/:sessionId`)
+### C. The Readiness Report & Feedback Architecture (`/report/:sessionId`)
 
+**Architecture:** Single Continuous Editorial Experience  
+**Vibe:** The Hubtown Contrast Shift. The Verdict.  
+**Background:** `bg-icyBlue` entirely. **Typography Base:** `ink` (#000000).
 
+```
+Section 1: The Macro Verdict (100vh)
+  - Left: 150px font-black text "84"
+  - Stacked uppercase text: "INTERVIEW / READINESS / SCORE"
+  - Bottom Right: Summary verdict paragraph.
+    Example: "Technically proficient, but communication lacks structural clarity."
 
-```text
-Layout: max-w-3xl centered
+Section 2: The Diagnostics (Min 50vh)
+  - Two architectural columns separated by a 1px solid black line.
+  - Left Column (Strengths): Massive header "CORE COMPETENCIES".
+    Followed by unboxed, bold typography bullet points.
+  - Right Column (Failures): Massive header "CRITICAL VULNERABILITIES".
+    Followed by brutal, honest weakness breakdowns.
 
-Score Header:
-  - Large circular score ring (SVG, animated reveal on mount)
-    e.g. 84 / 100 in center
-    Ring color: score purple (#4F46E5)
-  - Below: "Interview Readiness Score"
-  - Sub-label: "Based on 8 answers evaluated"
+Section 3: Telemetry / Per-Question Breakdown
+  - No cards. No accordions. A pure architectural timeline flowing down the page.
+  - Each question is separated by a full-width solid black line (border-ink).
 
-Two highlight cards side by side:
-  Left — Strengths (green tinted)
-    Border: success/30
-    Background: success/5
-    Bullet list of strengths
+  Layout per question:
+    Row 1: "SEQUENCE 01" (Metadata) | Score: "9/10"
+    Row 2: The Question (Massive bold ink text, 32px)
+    Row 3: Two columns.
+           Left: "AI EVALUATION" — What you did right/wrong.
+           Right: "CORRECTIVE ACTION" — How to fix it.
 
-  Right — Improvements (amber tinted)
-    Border: warning/30
-    Background: warning/5
-    Bullet list of improvements
-
-Per-Question Accordion:
-  - Each row: Question text + score badge
-  - Expanded: Full AI feedback text
-  - Alternating subtle bg for readability
-
-Actions:
-  - [Start New Interview] — black pill
-  - [Back to Dashboard] — outlined
-
+Section 4: The Terminus (Feedback Actions)
+  - Centered at the bottom of the scroll.
+  - [ NEW INTERVIEW ]       (Solid ink block)
+  - [ RETURN TO ARCHIVE ]   (Outline ink block)
+  - [ EXPORT REPORT ]       (Ghost text block)
 ```
 
 ---
 
-### 6. Analytics Page (`/analytics`)
+### D. Analytics Page (`/analytics`)
 
-**Key Analytics Modules:**
-
-* Skill Radar
-* Score Trend
-* Weak Areas
-* Strong Areas
-* Interview History
-
----
-
-### 7. Profile Page (`/profile`)
-
-
-
-```text
-Layout: Sidebar (280px) + main content
-
-Sidebar:
-  - User avatar + name
-  - Navigation:
-      Dashboard
-      New Interview
-      Sessions
-      Analytics
-      Profile Settings
-
-Main content — one main section:
-
-1. Profile Settings & Account Data:
-   Update email, password, and preferences.
+**Vibe:** Architectural data room. An editorial approach to telemetry. Do not convert into a traditional SaaS dashboard.
 
 ```
+Background: bg-abyss.
+Layout: Vertical scroll narrative. Massive full-screen modules separated by thin geometric frame lines.
 
-*(Note: Elements related to tracking have been migrated to the dedicated Analytics Page.)*
+Header: "ANALYTICS" (Massive pureWhite text).
+
+Module 1: Skill Radar
+  - Full-screen architectural radar visualization.
+  - Rendered with ultra-thin neonBlue geometric lines spanning across the dark abyss.
+  - Labels float in text-steel.
+
+Module 2: Score Trend
+  - Editorial readiness trend across interviews.
+  - An edge-to-edge line chart. No axes, no gridlines.
+  - Just a glowing neonBlue line charting readiness over time.
+
+Module 3: Weak & Strong Areas (Editorial Split)
+  - Left Column: "STRONG AREAS"
+    Massive typography list: React, DSA, API Design, Debugging.
+  - Right Column: "WEAK AREAS"
+    Massive typography list: Communication, System Design, Problem Solving, Technical Depth.
+
+Module 4: Interview History
+  - Historical simulations as an editorial timeline, not a dashboard table.
+  - Layout per entry: "DATE" | "ROLE" | "SCORE" separated by horizontal architectural rules.
+  - Interaction: Clicking an entry opens the corresponding report.
+
+Module 5: Readiness Evolution (AI Narrative)
+  - AI-generated editorial narrative summary block.
+  - No charts. Pure editorial typography on the abyss.
+  - Example output:
+    "Communication has improved by 18% across the last five simulations,
+     while system design remains the largest limiting factor."
+```
 
 ---
-## Route Map
 
-### Public Routes (no auth required)
-| Route      | Page       | Component File        |
-|------------|------------|-----------------------|
-| `/`        | Home       | `pages/Home.jsx`      |
-| `/login`   | Login      | `pages/Login.jsx`     |
+### E. Simulation Archive (`/archive`)
 
-### Protected Routes (auth required)
-| Route                      | Page       | Component File          |
-|----------------------------|------------|-------------------------|
-| `/dashboard`               | Dashboard  | `pages/Dashboard.jsx`   |
-| `/interview/:sessionId`    | Questions  | `pages/Interview.jsx`   |
-| `/feedback/:sessionId`     | Feedback   | `pages/Feedback.jsx`    |
-| `/analytics`               | Analytics  | `pages/Analytics.jsx`   |
-| `/profile`                 | Profile    | `pages/Profile.jsx`     |
+**Vibe:** A chronological mission log. A timeline of past encounters.
 
-### Redirect Rules
-- Unauthenticated user hits `/dashboard` → redirect to `/login`
-- Authenticated user hits `/login` → redirect to `/dashboard`
-- Unknown route → 404 page (`pages/NotFound.jsx`)
+```
+Background: bg-abyss.
+Layout: Single column, deeply indented timeline. Not a table-heavy admin page. No dashboard cards.
 
-### React Router Setup (App.jsx)
+Header: "ARCHIVE" (72px, pureWhite)
+
+The Timeline:
+  - A single, uninterrupted vertical frame line dropping down the left side of the screen.
+  - Each entry is a node delineated by architectural dividers.
+
+  Node Structure per entry:
+    - Date & Status: "OCTOBER 12, 2025 // STATUS: EVALUATED" (text-steel, tracking-widest)
+    - Role: "SENIOR FRONTEND ENGINEER" (48px, pureWhite)
+    - Company: "STRIPE" (24px, steel)
+    - Readiness Score: "SCORE: 88" (neonBlue)
+
+Interaction:
+  - Hovering a node: subtle neonBlue border appears around the bounding box.
+  - Clicking the node: transitions directly into the icyBlue Readiness Report (/report/:sessionId).
+```
+
+---
+
+### F. Profile Page (`/profile`)
+
+**Vibe:** System configuration terminal. Brutalist forms. Avoid generic settings-page aesthetics.
+
+```
+Background: bg-abyss.
+Layout: Centered, single column. Max width 3xl.
+
+Header: "PROFILE" (72px, pureWhite)
+
+Identity Section:
+  - Avatar (minimalist geometric circle frame).
+  - Massive text for Name.
+  - Minimal, border-b input for Email update.
+
+Configuration Sections (Stacked, separated by solid frame lines):
+
+  "SECURITY"
+    - Password Management (borderless text inputs).
+    - Login Methods (Google, etc.).
+
+  "INTERVIEW PREFERENCES"
+    - Preferred Duration (30m, 45m).
+    - Preferred Difficulty Level.
+    - Preferred Domains (React, Backend, Systems).
+
+  "NOTIFICATIONS"
+    - Email Notifications toggle.
+    - Report Notifications toggle.
+
+  "ACCOUNT ACTIONS" (Danger Zone)
+    - [ EXPORT ACCOUNT DATA ] (Secondary cinematic button)
+    - [ DELETE ACCOUNT ]      (Ghost text, text-danger)
+
+Save Actions: Floating [ SAVE CONFIGURATION ] (neon border button).
+```
+
+---
+
+## 9. Navigation Architecture
+
+The navigation is a disruptive, full-screen takeover. It pauses the current scene to offer systemic routing.
+
+### The Overlay
+
+- **Trigger:** Floating `[ MENU ]` metadata text in the top right of all screens.
+- **Background:** `bg-icyBlue` (forces the Hubtown contrast shift).
+- **Transition:** Fades in seamlessly (300ms) over the active viewport.
+
+### The Hierarchy & Routing
+
+Centered, massive `ink` typography. Labels are instantly understandable.
+
+| Label | Route |
+|---|---|
+| `NEW INTERVIEW` | `/` |
+| `ANALYTICS` | `/analytics` |
+| `ARCHIVE` | `/archive` |
+| `PROFILE` | `/profile` |
+
+### Interaction Behavior
+
+- **Hover:** Un-hovered items fade to 20% opacity. The hovered item remains 100% solid black.
+- **Close:** Massive `[ CLOSE ]` button in the top right.
+
+---
+
+## 10. Route Map & React Router Structure
+
+### Route Map
+
+| Route | Scene Title | Component File | Environment |
+|---|---|---|---|
+| `/` | Landing Narrative | `pages/Landing.jsx` | Abyss → Icy |
+| `/login` | Authentication | `pages/Login.jsx` | Abyss |
+| `/simulation/:sessionId` | Simulation Chamber | `pages/Simulation.jsx` | Abyss |
+| `/report/:sessionId` | Readiness Report | `pages/Report.jsx` | Icy Blue |
+| `/analytics` | Analytics | `pages/Analytics.jsx` | Abyss |
+| `/archive` | Simulation Archive | `pages/Archive.jsx` | Abyss |
+| `/profile` | Profile | `pages/Profile.jsx` | Abyss |
+
+### React Router Setup (`App.jsx`)
+
 ```jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-// Wrapper for protected routes
-const ProtectedRoute = ({ children }) => {
+// Wrapper for protected sequences
+const ProtectedSequence = ({ children }) => {
   const { isAuthenticated } = useSelector(state => state.auth)
-  return isAuthenticated ? children : <Navigate to="/login" replace />
+  return isAuthenticated ? children : <Navigate replace to="/login" />
 }
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* Public */}
-        <Route path="/"      element={<Home />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
 
         {/* Protected */}
-        <Route path="/dashboard" element={
-          <ProtectedRoute><Dashboard /></ProtectedRoute>
+        <Route path="/simulation/:sessionId" element={
+          <ProtectedSequence><Simulation /></ProtectedSequence>
         } />
-        <Route path="/interview/:sessionId" element={
-          <ProtectedRoute><Interview /></ProtectedRoute>
-        } />
-        <Route path="/feedback/:sessionId" element={
-          <ProtectedRoute><Feedback /></ProtectedRoute>
+        <Route path="/report/:sessionId" element={
+          <ProtectedSequence><Report /></ProtectedSequence>
         } />
         <Route path="/analytics" element={
-          <ProtectedRoute><Analytics /></ProtectedRoute>
+          <ProtectedSequence><Analytics /></ProtectedSequence>
+        } />
+        <Route path="/archive" element={
+          <ProtectedSequence><Archive /></ProtectedSequence>
         } />
         <Route path="/profile" element={
-          <ProtectedRoute><Profile /></ProtectedRoute>
+          <ProtectedSequence><Profile /></ProtectedSequence>
         } />
 
         {/* Fallback */}
         <Route path="*" element={<NotFound />} />
+
       </Routes>
     </BrowserRouter>
   )
 }
 ```
 
-### Sidebar Navigation Config
-```js
-// Used to render sidebar links dynamically
-export const NAV_LINKS = [
-  { label: 'Dashboard',     path: '/dashboard',  icon: 'LayoutDashboard' },
-  { label: 'New Interview', path: '/',            icon: 'Plus'            },
-  { label: 'Analytics',     path: '/analytics',  icon: 'BarChart2'       },
-  { label: 'Profile',       path: '/profile',    icon: 'User'            },
-]
-```
-----
-
-## Loading States
-
-
-
-```jsx
-/* Skeleton loader — use for question cards, session list */
-<div className="animate-pulse space-y-3">
-  <div className="h-6 bg-faint rounded w-3/4"></div>
-  <div className="h-4 bg-faint rounded w-1/2"></div>
-</div>
-
-/* AI thinking state — use during question generation / evaluation */
-<div className="flex items-center gap-3 text-muted text-sm">
-  <span className="flex gap-1">
-    <span className="w-1.5 h-1.5 bg-ai rounded-full animate-bounce [animation-delay:0ms]"></span>
-    <span className="w-1.5 h-1.5 bg-ai rounded-full animate-bounce [animation-delay:150ms]"></span>
-    <span className="w-1.5 h-1.5 bg-ai rounded-full animate-bounce [animation-delay:300ms]"></span>
-  </span>
-  Analyzing your answers...
-</div>
-
-```
-
 ---
 
-## Empty States
+## 11. Responsiveness Strategy (Desktop-First)
 
+**Philosophy: Laptop / Desktop First.**  
+Technical interviews are taken on laptops and large displays. The application is engineered primarily for large viewports (1024px+). The mobile experience is a graceful degradation, ensuring functionality without compromising the architectural brutalism.
 
+### Tailwind Breakpoints (Desktop-First Override Order)
 
-```text
-Style: Centered in content area, max-w-sm
-
-Icon: Simple line illustration (SVG)
-Headline: "No sessions yet."
-Subtext: "Start your first AI interview and track your progress here."
-CTA: [Start Interview] black pill button
+Since Tailwind is mobile-first by default, we write base classes for desktop and use **max-w** breakpoints to scale down.  
+Read breakpoints top-to-bottom as: **base = desktop → scale down to mobile.**
 
 ```
-
----
-
-## Page Transitions
-
-
-
-```javascript
-/* Use Framer Motion or simple CSS transitions */
-
-Page enter:
-  opacity: 0 → 1
-  translateY: 12px → 0
-  duration: 300ms
-  easing: ease-out
-
-Page exit:
-  opacity: 1 → 0
-  duration: 200ms
-
+2xl:  1536px+   (wide desktop)       → Full 120px+ typography, sweeping layouts
+xl:   1280px+   (large desktop)      → Primary target. Full visual language intact.
+lg:   1024px+   (laptop / desktop)   → Minimum desktop threshold. All scenes active.
+md:   768px+    (tablet)             → Typography scales down. Columns remain.
+sm:   640px+    (large phone)        → Single column. Reduced typography.
+base: < 640px   (mobile)             → Maximum degradation. Brutalist but functional.
 ```
 
----
+### Breakpoint Behavior Per Layout Type
 
-## Responsive Breakpoints
+**Home Hero (Landing)**
 
+| Breakpoint | Layout |
+|---|---|
+| `lg+` (desktop) | Two-column: AI Core visual left, headline right |
+| `md` (tablet) | Two columns remain, typography scales to 96px |
+| `< md` (mobile) | Single column, stacked. Typography scales to 72px |
 
+**Simulation Chamber (Questions)**
 
-```text
-Mobile first. Tailwind default breakpoints:
+| Breakpoint | Layout |
+|---|---|
+| All breakpoints | Always single column, `max-w-2xl` centered |
+| `< md` | Side padding reduced. Full viewport focus preserved. |
 
-sm:   640px+   (large phone)
-md:   768px+   (tablet)
-lg:   1024px+  (desktop)
-xl:   1280px+  (large desktop)
-2xl:  1536px+  (wide)
+**Readiness Report (Two-Column Diagnostics)**
 
-Home hero: 2-column on lg+, stacked on mobile
-Questions: Always single column, max-w-2xl centered
-Profile: Sidebar hidden on mobile (hamburger menu)
+| Breakpoint | Layout |
+|---|---|
+| `lg+` | Two columns: CORE COMPETENCIES | CRITICAL VULNERABILITIES |
+| `md` | Two columns remain, reduced font sizes |
+| `< md` | Stacked single column. Each section full-width. |
 
-```
+**Navigation Overlay**
 
----
+| Breakpoint | Behavior |
+|---|---|
+| All breakpoints | Full-screen icyBlue overlay. Retained at all sizes. |
+| `< md` | Font sizes scale from 72px to 48px to remain edge-to-edge |
 
-## Tailwind Config Summary
+**Profile Page**
 
+| Breakpoint | Behavior |
+|---|---|
+| `lg+` | Centered single column, `max-w-3xl`, architectural sidebar spacing |
+| `< md` | Full-width, no padding gutters. No sidebar. |
 
-
-```javascript
-// tailwind.config.js
-module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
-  theme: {
-    extend: {
-      colors: {
-        background: '#F8F8F6',
-        surface:    '#FFFFFF',
-        border:     '#E5E7EB',
-        ink:        '#111111',
-        muted:      '#6B7280',
-        faint:      '#F3F4F6',
-        ai:         '#2563EB',
-        score:      '#4F46E5',
-        success:    '#16A34A',
-        warning:    '#F59E0B',
-        danger:     '#DC2626',
-      },
-      fontFamily: {
-        sans: ['Inter', 'Plus Jakarta Sans', 'sans-serif'],
-      },
-      borderRadius: {
-        '2xl': '1rem',
-        '3xl': '1.5rem',
-      },
-      maxWidth: {
-        'reading': '800px',
-      },
-    },
-  },
-  plugins: [],
-}
+### Typography Scaling Rules
 
 ```
+Hero / Score (default 120px):
+  2xl: text-[120px]
+  xl:  text-[120px]
+  lg:  text-[100px]
+  md:  text-[80px]    (tablet)
+  sm:  text-[72px]    (phone)
 
----
-## Visual References
+Headline (default 72px):
+  lg:  text-7xl
+  md:  text-6xl
+  sm:  text-5xl
 
-Reference Images:
-- hubtown-hero.png
-<img width="1881" height="1037" alt="image" src="https://github.com/user-attachments/assets/50b9a1e2-494d-4ba1-a77a-f6828c6d38e2" />
+Scene Focus (default 48px):
+  lg:  text-5xl
+  md:  text-4xl
+  sm:  text-3xl
+```
 
-- hubtown-typography.png
-- hubtown-cards.png
-- hubtown-navigation.png
+On mobile, typography intentionally breaks standard "mobile safe-spacing" padding to maintain the brutalist, edge-to-edge editorial look. This is deliberate, not an oversight.
 
-Use these images as visual inspiration for:
-- Typography scale
-- Spacing
-- Layout composition
-- Motion design
-- Card styling
+### Mobile Scene Behavior
 
-----
-## Design Checklist (before each screen)
-
-
-
-* [ ] Does the page have one clear primary action?
-
-
-* [ ] Is there enough whitespace — does it breathe?
-
-
-* [ ] Is the AI-generated content clearly labeled with the `ai` blue badge?
-
-
-* [ ] Do all loading states have skeleton or thinking animations?
-
-
-* [ ] Is the max reading width capped at `max-w-2xl` for text-heavy areas?
-
-
-* [ ] Are hover states smooth (200ms transition)?
-
-
-* [ ] Does the mobile layout collapse cleanly?
-
-
+The Readiness Score scene occupies the entirety of the mobile viewport. The user must scroll down to reach the textual verdict. This is architectural, not a bug.
 
 ---
 
 ## Final Design Goal
 
+The user opens the application and immediately feels:
 
-
-The user opens the app and immediately feels:
-"This is serious. This is going to prepare me."
-
-Not playful. Not casual. Not a quiz app.
-A focused, premium simulation of the real thing.
-
-```
-
-```
+> **"This is serious. This is a premium flight simulator for my career."**
