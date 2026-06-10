@@ -2,6 +2,7 @@ import React from "react";
 import { LogIn, Menu } from "lucide-react";
 import { openMenu } from "../../redux/features/drawerSlice";
 import {useDispatch} from 'react-redux'
+import {Link} from 'react-router-dom'
 
 
 const Navbar = () => {
@@ -9,13 +10,13 @@ const Navbar = () => {
   return (
     <header 
       id="main-header"
-      className="fixed top-0 w-full bg-abyss flex justify-between items-center px-margin-edge h-20 z-50 border-b border-frame transition-all duration-300"
+      className="fixed top-0 w-full bg-abyss flex justify-between items-center px-margin-edge h-18 z-50 border-b border-frame transition-all duration-300"
     >
       <div 
         className="font-scene-focus text-scene-focus font-bold text-on-surface uppercase tracking-tighter" 
         style={{ fontSize: "24px", lineHeight: "32px" }}
-      >
-        INTERVIEW AI
+      ><Link to="/">INTERVIEW AI</Link>
+        
       </div>
 
       <div 

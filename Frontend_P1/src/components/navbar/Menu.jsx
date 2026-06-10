@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Fixed: Imported from router instead of lucide
+import { Link } from "react-router-dom";
 import { closeMenu } from "../../redux/features/drawerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { PlusCircle, BarChart3, Archive, User } from "lucide-react";
@@ -21,13 +21,15 @@ const Menu = () => {
       <div
         onClick={() => dispatch(closeMenu())}
         className={`fixed inset-0 z-50 bg-abyss/70 backdrop-blur-md transition-all duration-500 ${
-          isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          isMenuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       />
 
       {/* Sidebar Parent Container (Handles Shadow + Position) */}
       <aside
-        className="fixed z-[60] top-5 right-5 bottom-5 w-[calc(100%-40px)] max-w-[560px] filter drop-shadow-2xl will-change-transform"
+        className="fixed z-60 top-5 right-5 bottom-5 w-[calc(100%-40px)] max-w-[560px] filter drop-shadow-2xl will-change-transform"
         style={{
           transform: isMenuOpen ? "translateX(0)" : "translateX(110%)",
           transition: "transform 850ms cubic-bezier(0.77,0,0.175,1)",
@@ -35,10 +37,8 @@ const Menu = () => {
       >
         {/* OUTER LAYER (Border Color) */}
         <div className="panel-cut w-full h-full bg-frame">
-          
           {/* INNER LAYER (Content Panel + Layout) */}
           <div className="panel-cut absolute inset-[1px] bg-icy-blue text-ink flex flex-col justify-between">
-            
             {/* 1. HEADER (Moved to top of DOM) */}
             <div className="h-20 shrink-0 flex items-center justify-between px-10 md:px-12 border-b border-frame/10">
               <div className="flex items-center gap-2">
@@ -50,10 +50,7 @@ const Menu = () => {
 
               <button
                 onClick={() => dispatch(closeMenu())}
-                className="bg-abyss text-white px-7 h-14 flex items-center gap-3 uppercase tracking-[0.25em] text-xs hover:scale-[1.03] transition-all cursor-pointer"
-                style={{
-                  clipPath: "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)",
-                }}
+                className="bg-abyss text-white button-cut px-7 h-14 flex items-center gap-3 uppercase tracking-[0.25em] text-xs hover:scale-[1.03] transition-all cursor-pointer"
               >
                 <span className="text-lg">✦</span>
                 CLOSE
@@ -66,8 +63,8 @@ const Menu = () => {
                 {NAV_LINKS.map((item, idx) => {
                   const Icon = item.icon;
                   return (
-                    <Link 
-                      key={idx} 
+                    <Link
+                      key={idx}
                       to={item.path}
                       onClick={() => dispatch(closeMenu())}
                       className="flex items-center gap-6 group w-full py-2"
@@ -92,7 +89,6 @@ const Menu = () => {
                 www.interviewai.dev
               </div>
             </div>
-
           </div>
         </div>
       </aside>
