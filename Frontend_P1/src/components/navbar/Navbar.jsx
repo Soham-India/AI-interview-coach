@@ -2,64 +2,111 @@ import React from "react";
 import { LogIn, Menu } from "lucide-react";
 import { openMenu } from "../../redux/features/drawerSlice";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ isSimulation = false, timeString = "00:00:00", progressPercent = 0 }) => {
+const Navbar = ({
+  isSimulation = false,
+  timeString = "00:00:00",
+  progressPercent = 0,
+  isLoggedIn = true, // <-- Added to smoothly toggle between public and authenticated views
+}) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
-    <header 
+    <header
       id="main-header"
-      className="fixed top-0 w-full bg-abyss flex justify-between items-center px-margin-edge h-18 z-50 border-b border-frame transition-all duration-300"
+      className="fixed top-0 left-0 w-full bg-abyss flex justify-between items-center px-margin-edge h-18 z-50 border-b border-frame transition-all duration-300 select-none"
     >
       {/* Dynamic Branding vs Telemetry Left Track */}
       {!isSimulation ? (
-        <div 
-          className="font-scene-focus text-scene-focus font-bold text-icy-blue  uppercase tracking-tighter" 
-          style={{ fontSize: "24px", lineHeight: "32px" }}
-        >
-          <Link to="/">INTERVIEW <span className="">AI</span></Link>
+        <div className="font-scene-focus text-[24px] font-extrabold uppercase tracking-tighter text-icy-blue leading-none">
+          <Link to="/" className="hover:opacity-90 transition-opacity">
+            INTERVIEW{" "}
+            <span className="text-inverse-primary drop-shadow-[0_0_12px_rgba(0,136,255,0.65)]">
+              AI
+            </span>{" "}
+          </Link>
         </div>
       ) : (
-        <div className="flex flex-col select-none">
-          <span className="text-steel font-metadata text-[10px] uppercase tracking-wider">Elapsed Time</span>
-          <span className="text-pure-white font-mono text-base font-bold tracking-widest">{timeString}</span>
+        <div className="flex flex-col">
+          <span className="text-steel font-mono text-[9px] uppercase tracking-wider font-bold opacity-60">
+            Elapsed Time
+          </span>
+          <span className="text-pure-white font-mono text-sm md:text-base font-black tracking-widest leading-tight">
+            {timeString}
+          </span>
         </div>
       )}
 
-      {/* Center Progress Bar Segment - ONLY shows during active simulation */}
+      {/* Center Progress Bar Segment - Only renders during an active simulation run */}
       {isSimulation && (
         <div className="flex-1 max-w-xl px-12 hidden md:block">
           <div className="h-[2px] w-full bg-frame relative rounded-full">
-            <div 
-              className="absolute top-0 left-0 h-full bg-neon-blue transition-all duration-300 shadow-[0_0_8px_#0088FF]" 
+            <div
+              className="absolute top-0 left-0 h-full bg-neon-blue transition-all duration-300 shadow-[0_0_8px_#0088FF]"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <div className="flex justify-between mt-1.5">
-            <span className="text-steel font-metadata text-[9px] uppercase tracking-wider">Chamber Progression</span>
-            <span className="text-neon-blue font-metadata text-[9px] font-bold">{progressPercent}%</span>
+          <div className="flex justify-between mt-1.5 font-mono text-[9px] uppercase tracking-widest font-bold">
+            <span className="text-steel">Chamber Progression</span>
+            <span className="text-neon-blue">{progressPercent}%</span>
           </div>
         </div>
       )}
 
-      {/* Right Control Actions Trigger */}
-      <div 
-        className="flex items-stretch h-10 overflow-hidden" 
-        style={{ clipPath: "polygon(10% 0px, 100% 0px, 100% 90%, 90% 100%, 0px 100%, 0px 10%)" }}
+      {/* Right Control Actions Trigger (Brutalist Angular Poly-Clip-Path) */}
+      <div
+        className="flex items-stretch h-10 overflow-hidden"
+        style={{
+          clipPath:
+            "polygon(10% 0px, 100% 0px, 100% 90%, 90% 100%, 0px 100%, 0px 10%)",
+        }}
       >
-        <button className="bg-deep-panel hover:bg-raised-panel text-pure-white px-4 flex items-center gap-2 transition-colors duration-300 border-r border-frame">
-          <LogIn size={14} strokeWidth={1.8} />
-          <span className="font-metadata text-metadata tracking-widest">LOGIN</span>
-        </button>
-        
-        <button 
+        {isLoggedIn ? (
+          /* AUTHENTICATED PROFILE LINK TRIGGER BUTTON */
+          <button
+            onClick={() => navigate("/profile")}
+            className="bg-[#0F1422] hover:bg-[#232A3A] text-pure-white px-5 flex items-center gap-3.5 transition-colors duration-300 border-r border-frame font-mono text-xs font-bold uppercase tracking-widest cursor-pointer"
+          >
+            <img
+              alt="Operator"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH0_hJxhBKIBXBwylhrvDOqI1ah095I7gcoJzCZsvRKfy9HRnyr8A3DiWiycDWr6dibSzaksQTXiUBezpQuUsnGpeVnPMnP623Z2OpHah6w-58-iXLYPjSA1X-vkERwD-64hdig5-mXrgTYbhffdCnn5PV49kY_jCEQLcH5adUgy12cmTJRIAHFQIM5BjE4yoNSo8WQiG-qMSQNz4_OA_vZsD42ajb9lMz4LnM32P8KC0rcMBbs9xEiSV2w_YyN-2o5pYubskNW8vX"
+              className="w-4 h-4 rounded-full object-cover grayscale group-hover:grayscale-0 border border-neon-blue/20 shrink-0"
+            />
+            <span>OPERATOR 01</span>
+          </button>
+        ) : (
+          /* PUBLIC/UNAUTHENTICATED ACCOUNT ACCESS BUTTON */
+          <button
+            onClick={() => navigate("/login")}
+            className="bg-[#0A121F] hover:bg-surface-container-highest text-pure-white px-5 flex items-center gap-2 transition-colors duration-300 border-r border-frame font-mono text-xs font-bold uppercase tracking-widest cursor-pointer"
+          >
+            <LogIn size={13} strokeWidth={2.5} />
+            <span>LOGIN</span>
+          </button>
+        )}
+
+        {/* GLOBAL PERSISTENT SIDE DRAWER SWITCH TRIGGER BUTTON */}
+        <button
           id="open-menu"
           onClick={() => dispatch(openMenu())}
-          className="bg-icy-blue hover:bg-pure-white text-ink px-4 flex items-center gap-2 transition-colors duration-300"
+          className="bg-icy-blue hover:bg-pure-white text-ink px-5 flex items-center gap-2 transition-colors duration-300 font-mono text-xs font-black uppercase tracking-widest cursor-pointer"
         >
-          <Menu size={14} strokeWidth={1.8} />
-          <span className="font-metadata text-metadata tracking-widest">MENU</span>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.5"
+            viewBox="0 0 24 24"
+          >
+            <line x1="4" x2="20" y1="12" y2="12"></line>
+            <line x1="4" x2="20" y1="6" y2="6"></line>
+            <line x1="4" x2="20" y1="18" y2="18"></line>
+          </svg>
+          <span>MENU</span>
         </button>
       </div>
     </header>

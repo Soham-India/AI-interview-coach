@@ -22,7 +22,7 @@ const InitializePortal = () => {
   const handleCommence = () => {
     setIsCommencing(true);
 
-    dispatch(setInterviewConfig({jobTitle ,jobDesc}));
+    dispatch(setInterviewConfig({ jobTitle, jobDesc }));
 
     setTimeout(() => {
       navigate("/interview");
@@ -61,13 +61,13 @@ const InitializePortal = () => {
           </div>
 
           {/* Job Title Input */}
-          <div className="w-full mb-8 relative z-10">
+          <div className="w-full mb-8 relative z-10 pt-10">
             <input
               type="text"
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
               placeholder="[ DESIGNATE TARGET ROLE ]"
-              className="w-full bg-transparent border-none text-center text-2xl md:text-3xl font-black uppercase tracking-tighter text-pure-white outline-none focus:ring-0 placeholder-pure-white/30 transition-all duration-300 focus:drop-shadow-[0_0_15px_rgba(0,136,255,0.5)]"
+              className="w-full bg-transparent pb-4 border-none text-center text-2xl md:text-3xl font-black uppercase tracking-tighter text-pure-white outline-none focus:ring-0 placeholder-pure-white/30 transition-all duration-300 focus:drop-shadow-[0_0_15px_rgba(0,136,255,0.5)]"
             />
             <div className="h-px w-0 group-focus-within:w-full bg-gradient-to-r from-transparent via-neon-blue to-transparent transition-all duration-700 mx-auto mt-2" />
           </div>
@@ -99,7 +99,7 @@ const InitializePortal = () => {
             onClick={handleCommence}
             disabled={!isReady || isCommencing}
             className={`
-              absolute -bottom-8 left-1/2 -translate-x-1/2
+              absolute -bottom-7 left-1/2 -translate-x-1/2
               h-16 rounded-full
               flex items-center justify-center
               overflow-hidden group/btn
@@ -121,7 +121,6 @@ const InitializePortal = () => {
             ) : (
               /* Added w-full h-full to the wrapper so it centers perfectly */
               <div className="flex items-center justify-center relative w-full h-full">
-                
                 {/* Play icon now fades out (opacity-0) and scales down slightly on hover */}
                 <Play
                   size={20}
