@@ -16,7 +16,7 @@ const VerdictSection = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon-blue/10 blur-[160px] rounded-full z-0 animate-pulse pointer-events-none select-none" />
 
       <StarsBg className="absolute inset-0 z-0 pointer-events-none select-none" />
-        
+
       {/* Main content layer wrapped with your active visibility observer */}
       <FadeInSection className="z-10 px-margin-edge text-center max-w-container-max w-full flex flex-col items-center space-y-12">
         <h2 className="font-hero-score text-hero-score text-pure-white uppercase tracking-tighter leading-[0.8] break-words w-full drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]">

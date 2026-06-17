@@ -29,7 +29,7 @@ const Menu = () => {
 
       {/* Sidebar Parent Container (Handles Shadow + Position) */}
       <aside
-        className="fixed z-60 top-5 right-5 bottom-5 w-[calc(100%-40px)] max-w-[560px] filter drop-shadow-2xl will-change-transform"
+        className="fixed z-60 top-5 right-5 bottom-5 w-[calc(100%-40px)] max-w-[500px] filter drop-shadow-2xl will-change-transform"
         style={{
           transform: isMenuOpen ? "translateX(0)" : "translateX(110%)",
           transition: "transform 850ms cubic-bezier(0.77,0,0.175,1)",

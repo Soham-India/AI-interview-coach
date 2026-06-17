@@ -509,16 +509,6 @@
   transform: translateY(0);
 }
 
-/* @keyframes bar-bounce {
-  0%, 100% { transform: scaleY(0.3); }
-  50% { transform: scaleY(1); }
-}
-
-@utility animate-bar {
-  animation: bar-bounce ease-in-out infinite;
-  transform-origin: bottom;
-} */
-
 @keyframes bar-wave {
   0%, 100% { height: 25%; }
   50% { height: 100%; }
@@ -527,4 +517,55 @@
 
 @utility animate-bar-wave {
   animation: bar-wave ease-in-out infinite;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+@utility architectural-cut {
+  clip-path: polygon(
+    0 15px, 15px 0, 
+    calc(100% - 15px) 0, 100% 15px, 
+    100% calc(100% - 15px), calc(100% - 15px) 100%, 
+    15px 100%, 0 calc(100% - 15px)
+  );
+}
+
+/* =========================================
+   PORTAL ORBIT & PARTICLE ANIMATIONS
+========================================= */
+@keyframes spin-orbit {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes move-particle {
+  from { transform: translateY(0); }
+  to { transform: translateY(100vh); }
+}
+
+/* Base class for the generated particles */
+.particle-element {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(1px);
+  animation: move-particle linear infinite;
+}
+
+/* Register the clean utility name first (even if empty) */
+@utility brutalist-scroll {
+  scrollbar-width: thin; /* Firefox fallback */
+}
+
+/* Apply the webkit scrollbar styles using standard CSS targeting */
+.brutalist-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.brutalist-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 136, 255, 0.3);
 }

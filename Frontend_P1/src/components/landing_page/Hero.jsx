@@ -6,12 +6,12 @@ import FadeInSection from "../ui/FadeInSection";
 const Hero = () => {
   return (
     <section className="relative h-screen w-full flex flex-col shrink-0 items-center justify-center overflow-hidden wireframe-grid bg-abyss blueprint-scan snap-start snap-always border-b border-frame">
-
-    
       <div className="absolute inset-0 z-0  bg-gradient-to-b from-abyss/90 via-transparent to-abyss" />
 
-      <FadeInSection className="z-10 flex flex-col items-center justify-center space-y-12 max-w-container-max px-margin-edge w-full text-center  
-      ">
+      <FadeInSection
+        className="z-10 flex flex-col items-center justify-center space-y-12 max-w-container-max px-margin-edge w-full text-center  
+      "
+      >
         <div className="relative w-80 h-80 flex items-center justify-center group ">
           <div className="animate-ai-core  w-56 h-56 border border-neon-blue/40 rounded-none transform rotate-45 backdrop-blur-sm bg-panel/20 flex items-center justify-center ">
             <div className="w-40 h-40 border-2 border-neon-blue/60 transform -rotate-45 flex items-center justify-center">
@@ -41,7 +41,7 @@ const Hero = () => {
           </h1>
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-4">
             <Link
-              to="/interview"
+              to="/initialize" // Changed from "/interview"
               className="inline-block border border-neon-blue text-neon-blue font-metadata text-metadata uppercase tracking-widest px-10 py-5 hover:bg-neon-blue hover:text-abyss hover:shadow-[0_0_30px_rgba(0,136,255,0.4)] transition-all duration-500 backdrop-blur-sm relative overflow-hidden group"
             >
               <span className="relative z-10">[ ENTER THE SIMULATOR ]</span>
