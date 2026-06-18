@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PlusCircle, BarChart3, Archive, User } from "lucide-react";
 
 const NAV_LINKS = [
-  { icon: PlusCircle, label: "NEW INTERVIEW", path: "/interview" },
+  { icon: PlusCircle, label: "NEW INTERVIEW", path: "/initialize" },
   { icon: BarChart3, label: "ANALYTICS", path: "/analytics" },
   { icon: Archive, label: "ARCHIVE", path: "/archive" },
   { icon: User, label: "PROFILE", path: "/profile" },

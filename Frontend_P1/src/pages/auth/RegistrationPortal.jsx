@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Mail, Lock, Zap, ArrowLeft, RefreshCw, Terminal } from "lucide-react";
+import {
+  User,
+  Mail,
+  Lock,
+  Zap,
+  ArrowLeft,
+  RefreshCw,
+  Terminal,
+} from "lucide-react";
 
 const RegistrationPortal = () => {
   const navigate = useNavigate();
-  
+
   // Controlled input states
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
 
   const handleRegistrationSubmit = (e) => {
@@ -30,7 +38,6 @@ const RegistrationPortal = () => {
 
   return (
     <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative selection:bg-neon-blue selection:text-abyss">
-      
       {/* BACKGROUND WIREFRAME GRID LAYER */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none" />
@@ -43,7 +50,7 @@ const RegistrationPortal = () => {
           INTERVIEW AI
         </div>
         <nav className="flex space-x-unit items-center">
-          <button 
+          <button
             onClick={() => navigate("/login")}
             className="font-mono text-xs uppercase tracking-widest text-pure-white px-4 py-2 hover:text-neon-blue transition-colors duration-300 cursor-pointer"
           >
@@ -77,10 +84,8 @@ const RegistrationPortal = () => {
       {/* MAIN REGISTRATION PORTAL MOUNT */}
       <main className="relative z-10 flex flex-col items-center justify-center min-h-screen pt-20 px-4">
         <div className="w-full max-w-xl">
-          
           {/* CENTRAL BRUTALIST GRID MODULE */}
           <div className="bg-panel/90 border border-neon-blue/40 shadow-[0_0_40px_rgba(0,136,255,0.15)] p-10 relative backdrop-blur-md">
-            
             {/* Structural High-Tech Framing Corners */}
             <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-neon-blue -translate-x-0.5 -translate-y-0.5" />
             <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-neon-blue translate-x-0.5 -translate-y-0.5" />
@@ -90,7 +95,8 @@ const RegistrationPortal = () => {
             {/* Ingestion Panel Headers */}
             <div className="mb-8 text-center select-none">
               <h1 className="font-mono text-2xl md:text-3xl font-black text-pure-white uppercase tracking-tight mb-1 flex items-center justify-center gap-2">
-                <Terminal size={18} className="text-neon-blue animate-pulse" /> Initialize Protocol
+                <Terminal size={18} className="text-neon-blue animate-pulse" />{" "}
+                Initialize Protocol
               </h1>
               <p className="font-mono text-[10px] text-steel uppercase tracking-widest font-bold">
                 Operator Credential Assignment
@@ -99,7 +105,6 @@ const RegistrationPortal = () => {
 
             {/* ACTIONS CONFIGURATION SUBMISSION */}
             <form onSubmit={handleRegistrationSubmit} className="space-y-6">
-              
               {/* Field 01: Full Name */}
               <div className="space-y-1.5 group/field">
                 <label className="block font-mono text-[9px] text-neon-blue uppercase tracking-widest opacity-80 group-focus-within/field:opacity-100 font-bold select-none">
@@ -107,7 +112,7 @@ const RegistrationPortal = () => {
                 </label>
                 <div className="relative border-b border-frame focus-within:border-neon-blue transition-colors duration-300 flex items-center bg-abyss/30 px-2">
                   <User size={14} className="text-steel/40 mr-2.5 shrink-0" />
-                  <input 
+                  <input
                     type="text"
                     required
                     value={fullName}
@@ -127,7 +132,7 @@ const RegistrationPortal = () => {
                 </label>
                 <div className="relative border-b border-frame focus-within:border-neon-blue transition-colors duration-300 flex items-center bg-abyss/30 px-2">
                   <Mail size={14} className="text-steel/40 mr-2.5 shrink-0" />
-                  <input 
+                  <input
                     type="email"
                     required
                     value={email}
@@ -147,7 +152,7 @@ const RegistrationPortal = () => {
                 </label>
                 <div className="relative border-b border-frame focus-within:border-neon-blue transition-colors duration-300 flex items-center bg-abyss/30 px-2">
                   <Lock size={14} className="text-steel/40 mr-2.5 shrink-0" />
-                  <input 
+                  <input
                     type="password"
                     required
                     value={password}
@@ -167,7 +172,7 @@ const RegistrationPortal = () => {
                 </label>
                 <div className="relative border-b border-frame focus-within:border-neon-blue transition-colors duration-300 flex items-center bg-abyss/30 px-2">
                   <Lock size={14} className="text-steel/40 mr-2.5 shrink-0" />
-                  <input 
+                  <input
                     type="password"
                     required
                     value={confirmPassword}
@@ -182,22 +187,35 @@ const RegistrationPortal = () => {
 
               {/* Execution Triggers */}
               <div className="pt-6 space-y-4">
-                <button 
+                <button
                   type="submit"
-                  disabled={isRegistering || !fullName || !email || !password || !confirmPassword}
+                  disabled={
+                    isRegistering ||
+                    !fullName ||
+                    !email ||
+                    !password ||
+                    !confirmPassword
+                  }
                   className="w-full h-15 border border-neon-blue bg-neon-blue/5 group/btn relative overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(0,136,255,0.25)] button-cut cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <div className="absolute inset-0 bg-neon-blue/10 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />
                   <span className="relative z-10 font-mono text-xs font-black text-pure-white uppercase tracking-[0.25em] flex items-center justify-center gap-2">
                     {isRegistering ? (
                       <>
-                        <RefreshCw size={14} className="animate-spin" strokeWidth={2.5} />
+                        <RefreshCw
+                          size={14}
+                          className="animate-spin"
+                          strokeWidth={2.5}
+                        />
                         ALLOCATING MAIN_DIR...
                       </>
                     ) : (
                       <>
                         INITIATE ACCOUNT PROTOCOL
-                        <Zap size={14} className="group-hover/btn:scale-110 transition-transform" />
+                        <Zap
+                          size={14}
+                          className="group-hover/btn:scale-110 transition-transform"
+                        />
                       </>
                     )}
                   </span>
@@ -209,12 +227,14 @@ const RegistrationPortal = () => {
                     onClick={() => navigate("/login")}
                     className="font-mono text-[10px] text-steel hover:text-pure-white uppercase tracking-[0.2em] transition-colors duration-300 inline-flex items-center group/back cursor-pointer bg-transparent border-none outline-none"
                   >
-                    <ArrowLeft size={12} className="mr-2 group-hover/back:-translate-x-1 transition-transform" />
+                    <ArrowLeft
+                      size={12}
+                      className="mr-2 group-hover/back:-translate-x-1 transition-transform"
+                    />
                     ACCESS EXISTING TERMINAL
                   </button>
                 </div>
               </div>
-
             </form>
           </div>
 
@@ -224,10 +244,8 @@ const RegistrationPortal = () => {
             <span>DATA_LOCALIZATION: REGION_01</span>
             <span>© 2026 INTERVIEW_AI_SYSTEMS</span>
           </div>
-
         </div>
       </main>
-
     </div>
   );
 };

@@ -10,11 +10,9 @@ const drawerSlice = createSlice({
   reducers: {
     openMenu: (state) => {
       state.isMenuOpen = true;
-      console.log("open")
     },
     closeMenu: (state) => {
       state.isMenuOpen = false;
-      console.log("close")
     },
     toggleMenu: (state) => {
       if (state.isMenuOpen) {

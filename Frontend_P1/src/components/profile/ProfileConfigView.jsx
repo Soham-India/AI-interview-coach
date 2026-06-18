@@ -91,7 +91,7 @@ const ProfileConfigView = () => {
             </p>
           </div>
           <div className="flex gap-4">
-            {["CYBER", "LIGHT", "DARK"].map((t) => (
+            {["CYBER", "BLUEPRINT", "TERMINAL"].map((t) => (
               <ConfigButton
                 key={t}
                 isActive={theme === t}

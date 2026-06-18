@@ -26,8 +26,9 @@ const VerdictSection = () => {
         </h2>
 
         {/* High-Contrast Interactive Simulator Trigger */}
+
         <Link
-          to="/interview"
+          to="/initialize"
           className="bg-pure-white text-abyss font-scene-focus text-2xl md:text-3xl uppercase px-16 py-10 border-2 border-pure-white hover:bg-transparent hover:text-pure-white transition-all duration-500 w-full md:w-auto text-center flex items-center justify-center gap-6 group relative overflow-hidden button-cut cursor-pointer"
         >
           <span className="relative z-10 font-black tracking-wide">
