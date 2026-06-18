@@ -1,0 +1,19 @@
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+@layer base {
+  body {
+    background: var(--color-abyss);
+    color: var(--color-on-surface);
+    font-family: Inter, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden; 
+  } 
+}

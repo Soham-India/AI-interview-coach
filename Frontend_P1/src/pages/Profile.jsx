@@ -7,7 +7,7 @@ import ProfileIngestionView from "../components/profile/ProfileIngestionView";
 
 const MOCK_USER_PROFILE = {
   name: "ALEX MORGAN",
-  grade: "L-12",
+  callsign: "bravo",
   role: "Senior Backend Engineer",
   avatarUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuDnK2RIeRnhNyCuwCKcAQXKTzIn0kmqIwADa8clLF0P-fGMp6hbKdGEw_pPCacnZV06y_CmT5tKCWyU31iyLPzS_Hxf2oUu43z_eJq462Xr24UJEu6jcNyKXRz48SH9AG1wnOrh8VmkgOmndIU_QHaZiE_V5QHPd5NGAGPpWiyA1zaQFddUg496GkJe9kltuC5fdAgl2l7MjlkcUFxFKG8ong23eE0zlvgKm8mbQQrRHUP-j8gPAsaMf-h3cSETovfLQFWuq1NmbsM9",
   stats: {

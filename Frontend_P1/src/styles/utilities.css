@@ -1,0 +1,117 @@
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
+/* =========================================
+   LAYOUT & SHAPES
+========================================= */
+@utility panel-cut {
+  clip-path: polygon(
+    24px 0, calc(100% - 24px) 0, 100% 24px, 100% calc(100% - 24px),
+    calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px), 0 24px
+  );
+}
+
+@utility button-cut {
+  clip-path: polygon(
+    16px 0, 100% 0, 100% calc(100% - 16px), 
+    calc(100% - 16px) 100%, 0 100%, 0 16px
+  );
+}
+
+@utility architectural-cut {
+  clip-path: polygon(
+    0 15px, 15px 0, calc(100% - 15px) 0, 100% 15px, 
+    100% calc(100% - 15px), calc(100% - 15px) 100%, 
+    15px 100%, 0 calc(100% - 15px)
+  );
+}
+
+/* =========================================
+   HERO & RADIAL EFFECTS
+========================================= */
+@utility hero-radial {
+  background-image: radial-gradient(ellipse at center, var(--tw-gradient-stops));
+}
+
+@utility hero-radial-og {
+  background-image: radial-gradient(ellipse at center, rgba(10,18,31,.6), var(--color-abyss), var(--color-abyss));
+}
+
+@utility hero-radial-blue {
+  background-image: radial-gradient(ellipse at center, rgba(0,136,255,.15), transparent 70%);
+}
+
+@utility hero-radial-glow {
+  background-image: radial-gradient(circle at center, rgba(0,136,255,.3), transparent);
+}
+
+@utility hero-radial-gradient {
+  background-image: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--color-neon-blue) 20%, transparent),
+    var(--color-abyss),
+    var(--color-abyss)
+  );
+}
+
+@utility wireframe-grid {
+  background-image: 
+    radial-gradient(var(--color-neon-blue) 0.5px, transparent 0.5px),
+    linear-gradient(to right, rgba(0, 136, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 136, 255, 0.05) 1px, transparent 1px);
+  background-size: 8px 8px, 64px 64px, 64px 64px;
+}
+
+/* =========================================
+   BLUEPRINT SCAN EFFECT
+========================================= */
+@utility blueprint-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.blueprint-scan::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(0, 136, 255, 0.05), transparent);
+  animation: scan 8s linear infinite;
+}
+
+/* =========================================
+   ANIMATION STATES
+========================================= */
+@utility fade-in-section {
+  animation: fade-in 1s ease forwards;
+}
+
+@utility observe-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@utility animate-bar-wave {
+  animation: bar-wave ease-in-out infinite;
+}
+
+/* =========================================
+   COMPONENTS / PARTICLES
+========================================= */
+.particle-element {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(1px);
+  animation: move-particle linear infinite;
+}

@@ -1,17 +1,19 @@
 import React from "react";
 import { LogIn, Menu } from "lucide-react";
 import { openMenu } from "../../redux/features/drawerSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { selectOperatorIdentity } from "../../redux/features/profileSlice";
 
 const Navbar = ({
   isSimulation = false,
   timeString = "00:00:00",
   progressPercent = 0,
-  isLoggedIn = true, // <-- Added to smoothly toggle between public and authenticated views
+  isLoggedIn = true, 
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const operator = useSelector(selectOperatorIdentity);
 
   return (
     <header
@@ -70,11 +72,12 @@ const Navbar = ({
             className="bg-[#0F1422] hover:bg-[#232A3A] text-pure-white px-5 flex items-center gap-3.5 transition-colors duration-300 border-r border-frame font-mono text-xs font-bold uppercase tracking-widest cursor-pointer"
           >
             <img
-              alt="Operator"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH0_hJxhBKIBXBwylhrvDOqI1ah095I7gcoJzCZsvRKfy9HRnyr8A3DiWiycDWr6dibSzaksQTXiUBezpQuUsnGpeVnPMnP623Z2OpHah6w-58-iXLYPjSA1X-vkERwD-64hdig5-mXrgTYbhffdCnn5PV49kY_jCEQLcH5adUgy12cmTJRIAHFQIM5BjE4yoNSo8WQiG-qMSQNz4_OA_vZsD42ajb9lMz4LnM32P8KC0rcMBbs9xEiSV2w_YyN-2o5pYubskNW8vX"
+              alt={operator.name}
+              src={operator.avatarUrl}
               className="w-4 h-4 rounded-full object-cover grayscale group-hover:grayscale-0 border border-neon-blue/20 shrink-0"
             />
-            <span>OPERATOR 01</span>
+            <span>{operator.callsign}</span>
+            
           </button>
         ) : (
           /* PUBLIC/UNAUTHENTICATED ACCOUNT ACCESS BUTTON */

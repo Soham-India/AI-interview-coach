@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Sliders, ShieldAlert, Paintbrush } from "lucide-react";
-import ConfigButton from "../ui/elements/ConfigButton"; // Import your new atomic button
+import ConfigButton from "../ui/elements/ConfigButton";
+import { 
+  setInterviewLength, 
+  setDifficultyThreshold, 
+  setInterfaceTheme 
+} from "../../redux/features/profileSlice";
 
 const ProfileConfigView = () => {
-  // Interactive control states for system configs
-  const [length, setLength] = useState(10);
-  const [difficulty, setDifficulty] = useState("ADAPTIVE");
-  const [theme, setTheme] = useState("CYBER");
+  const dispatch = useDispatch();
+  
+  // Connect cleanly to your centralized profile data fields
+  const { length, difficulty, theme } = useSelector((state) => state.profile);
 
   return (
     <div className="w-full h-full flex flex-col justify-center space-y-10 xl:space-y-14">
@@ -39,7 +45,7 @@ const ProfileConfigView = () => {
               <ConfigButton
                 key={val}
                 isActive={length === val}
-                onClick={() => setLength(val)}
+                onClick={() => dispatch(setInterviewLength(val))}
               >
                 {val < 10 ? `0${val}` : val}
               </ConfigButton>
@@ -64,7 +70,7 @@ const ProfileConfigView = () => {
               <ConfigButton
                 key={diff}
                 isActive={difficulty === diff}
-                onClick={() => setDifficulty(diff)}
+                onClick={() => dispatch(setDifficultyThreshold(diff))}
               >
                 {diff}
               </ConfigButton>
@@ -89,7 +95,7 @@ const ProfileConfigView = () => {
               <ConfigButton
                 key={t}
                 isActive={theme === t}
-                onClick={() => setTheme(t)}
+                onClick={() => dispatch(setInterfaceTheme(t))}
               >
                 {t}
               </ConfigButton>

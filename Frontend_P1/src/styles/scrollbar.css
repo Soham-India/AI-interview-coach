@@ -1,0 +1,49 @@
+/* ==========================================================================
+   SCROLLBARS
+   ========================================================================== */
+
+/* Hide scrollbar completely */
+@utility no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Brutalist Scrollbar Base */
+@utility brutalist-scroll {
+  scrollbar-width: thin; 
+}
+.brutalist-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.brutalist-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 136, 255, 0.3);
+}
+
+/* Minimalist Terminal Engine Overrides */
+textarea.brutalist-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #1A2436 transparent;
+}
+textarea.brutalist-scroll::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+textarea.brutalist-scroll::-webkit-scrollbar-track {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+textarea.brutalist-scroll::-webkit-scrollbar-thumb {
+  background-color: #1A2436 !important; 
+  border-radius: 9999px !important;
+}
+textarea.brutalist-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #0088FF !important; 
+}
+textarea.brutalist-scroll::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}

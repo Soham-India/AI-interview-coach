@@ -1,0 +1,134 @@
+/* ==========================================================================
+   THEME TOKENS
+   ========================================================================== */
+@theme {
+  /* =========================================
+     COLORS
+  ========================================= */
+  --color-surface: #0d141d;
+  --color-surface-dim: #0d141d;
+  --color-surface-bright: #333a44;
+  --color-surface-container-lowest: #080f18;
+  --color-surface-container-low: #151c26;
+  --color-surface-container: #19202a;
+  --color-surface-container-high: #242a34;
+  --color-surface-container-highest: #2e353f;
+  --color-on-surface: #dce3f0;
+  --color-on-surface-variant: #c0c6d6;
+  --color-inverse-surface: #dce3f0;
+  --color-inverse-on-surface: #2a313b;
+  --color-outline: #8a919f;
+  --color-outline-variant: #404754;
+  --color-surface-tint: #a8c8ff;
+  --color-primary: #a8c8ff;
+  --color-on-primary: #003061;
+  --color-primary-container: #3491ff;
+  --color-on-primary-container: #002955;
+  --color-inverse-primary: #005eb3;
+  --color-secondary: #bbc6e4;
+  --color-on-secondary: #253048;
+  --color-secondary-container: #3e4962;
+  --color-on-secondary-container: #adb8d6;
+  --color-tertiary: #bdc7de;
+  --color-on-tertiary: #273143;
+  --color-tertiary-container: #8791a7;
+  --color-on-tertiary-container: #202a3c;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-primary-fixed: #d5e3ff;
+  --color-primary-fixed-dim: #a8c8ff;
+  --color-on-primary-fixed: #001b3c;
+  --color-on-primary-fixed-variant: #004689;
+  --color-secondary-fixed: #d8e2ff;
+  --color-secondary-fixed-dim: #bbc6e4;
+  --color-on-secondary-fixed: #101b32;
+  --color-on-secondary-fixed-variant: #3c475f;
+  --color-tertiary-fixed: #d9e2fb;
+  --color-tertiary-fixed-dim: #bdc7de;
+  --color-on-tertiary-fixed: #111c2d;
+  --color-on-tertiary-fixed-variant: #3d475b;
+  --color-background: #0d141d;
+  --color-on-background: #dce3f0;
+  --color-surface-variant: #2e353f;
+
+  --color-abyss: #050b14;
+  --color-panel: #0a121f;
+  --color-frame: #1a2436;
+  --color-icy-blue: #d5e0ff;
+  --color-ink: #000000;
+  --color-pure-white: #ffffff;
+  --color-steel: #8ba0b8;
+  --color-neon-blue: #0088ff;
+  --color-success: #10b981;
+  --color-warning: #ef4444;
+  --color-danger: #dc2626;
+  --color-deep-panel: #0F1422;
+  --color-raised-panel: #232A3A;
+
+  /* =========================================
+     SPACING
+  ========================================= */
+  --spacing-unit: 8px;
+  --spacing-gutter: 24px;
+  --spacing-panel-padding: 32px;
+  --spacing-margin-edge: 48px;
+  --spacing-container-max: 1440px;
+
+  /* =========================================
+     BORDER RADIUS
+  ========================================= */
+  --radius: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* =========================================
+     TYPOGRAPHY
+  ========================================= */
+  --font-hero-score: "Inter", sans-serif;
+  --font-headline-xl: "Inter", sans-serif;
+  --font-scene-focus: "Inter", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-metadata: "Inter", sans-serif;
+  --font-headline-xl-mobile: "Inter", sans-serif;
+  --font-sans: "Inter", sans-serif;
+
+  --text-hero-score: 120px;
+  --text-hero-score--line-height: 110px;
+  --text-hero-score--font-weight: 900;
+  --text-hero-score--letter-spacing: -0.05em;
+
+  --text-headline-xl: 72px;
+  --text-headline-xl--line-height: 80px;
+  --text-headline-xl--font-weight: 800;
+  --text-headline-xl--letter-spacing: -0.03em;
+
+  --text-headline-xl-mobile: 40px;
+  --text-headline-xl-mobile--line-height: 44px;
+  --text-headline-xl-mobile--font-weight: 800;
+
+  --text-scene-focus: 48px;
+  --text-scene-focus--line-height: 56px;
+  --text-scene-focus--font-weight: 700;
+
+  --text-body-lg: 24px;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 400;
+
+  --text-metadata: 12px;
+  --text-metadata--line-height: 16px;
+  --text-metadata--font-weight: 500;
+  --text-metadata--letter-spacing: 0.15em;
+
+  /* =========================================
+     TAILWIND V4 ANIMATION MAPPINGS
+  ========================================= */
+  --animate-spin-slow: rotate 10s linear infinite;
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-glow: pulse-glow 4s ease-in-out infinite;
+  --animate-ai-core: pulse-glow 4s ease-in-out infinite, core-rotate 20s linear infinite;
+  --animate-fade-up: fade-up 1s ease forwards;
+  --animate-zoom-in: zoom-in 0.8s ease forwards;
+}
