@@ -37,7 +37,7 @@ const RegistrationPortal = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative selection:bg-neon-blue selection:text-abyss">
+    <div className="app-shell">
       {/* BACKGROUND WIREFRAME GRID LAYER */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none" />

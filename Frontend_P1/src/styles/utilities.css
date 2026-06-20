@@ -27,6 +27,17 @@
   );
 }
 
+@utility app-shell {
+  @apply w-full h-screen
+         cyber-scrollbar
+         bg-abyss
+         text-pure-white
+         overflow-hidden
+         relative
+         selection:bg-neon-blue
+         selection:text-abyss;
+}
+
 /* =========================================
    HERO & RADIAL EFFECTS
 ========================================= */

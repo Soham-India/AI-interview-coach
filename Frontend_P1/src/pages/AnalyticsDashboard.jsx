@@ -25,7 +25,7 @@ const MOCK_ANALYTICS_SUMMARY = {
 
 const AnalyticsDashboard = () => {
   return (
-    <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative selection:bg-neon-blue selection:text-abyss">
+    <div className="app-shell">
       
       <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none z-0" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#050b14_95%)] pointer-events-none z-0" />

@@ -19,7 +19,7 @@ const ArchiveVault = () => {
   const filteredLogs = useSelector(selectFilteredVaultLogs);
 
   return (
-    <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative selection:bg-neon-blue selection:text-abyss">
+    <div className="app-shell">
       {/* ATMOSPHERIC PARALLAX LAYOUT BACKGROUND COMPONENTS */}
       <div className="absolute inset-0 perspective-grid opacity-25 pointer-events-none z-0" />
 

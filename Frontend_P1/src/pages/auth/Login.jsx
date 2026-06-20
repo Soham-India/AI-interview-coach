@@ -22,7 +22,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative selection:bg-neon-blue selection:text-abyss">
+    <div className="app-shell">
       
       {/* BACKGROUND MATRIX GRAPHICS & PULSING GRID */}
       <div className="absolute inset-0 z-0 overflow-hidden opacity-30 pointer-events-none">

@@ -42,7 +42,7 @@ const MOCK_QUESTIONS_FEED = [
 
 const ReportDashboard = () => {
   return (
-    <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative">
+    <div className="app-shell">
       {/* Immersive radial layout tracking matrix fields */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(26,36,54,0.15)_0%,#050b14_100%)] overflow-hidden pointer-events-none z-0" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5 z-0">

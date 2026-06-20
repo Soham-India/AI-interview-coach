@@ -20,7 +20,7 @@ const MOCK_USER_PROFILE = {
 
 const ProfileDashboard = () => {
   return (
-    <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative selection:bg-neon-blue selection:text-abyss">
+    <div className="app-shell">
       
       {/* High-density blueprint styling backgrounds */}
       <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none z-0" />
