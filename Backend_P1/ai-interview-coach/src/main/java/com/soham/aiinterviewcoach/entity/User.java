@@ -2,6 +2,7 @@ package com.soham.aiinterviewcoach.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +29,7 @@ public class User extends BaseEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String callsign;
 
     @Column(length = 100)

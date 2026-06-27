@@ -37,14 +37,14 @@ const Login = () => {
       </div>
 
       {/* FIXED CONTEXTUAL TOP NAVIGATION BAR (No bottom border as per design directives) */}
-      <header className="flex justify-between items-center px-margin-edge h-20 w-full absolute top-0 left-0 z-50 select-none">
+      {/* <header className="flex justify-between items-center px-margin-edge h-20 w-full absolute top-0 left-0 z-50 select-none">
         <div className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
           AI INTERVIEW COACH
         </div>
         <div className="font-mono text-xs uppercase tracking-widest text-steel hover:text-pure-white transition-colors duration-200 cursor-pointer">
           [ MENU ]
         </div>
-      </header>
+      </header> */}
 
       {/* LEFT SIDE VERTICAL TELEMETRY PERIPHERALS */}
       <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-12 z-20 hidden md:flex select-none pointer-events-none">
