@@ -1,22 +1,33 @@
 package com.soham.aiinterviewcoach.service;
 
-import com.soham.aiinterviewcoach.dto.ai.FinalReportResponse;
-import com.soham.aiinterviewcoach.dto.ai.MetricEvaluationResponse;
-import com.soham.aiinterviewcoach.dto.evaluation.AnswerSubmitRequest;
-import com.soham.aiinterviewcoach.dto.evaluation.EvaluationResponse;
-import com.soham.aiinterviewcoach.dto.evaluation.FinalReportDTO;
-import com.soham.aiinterviewcoach.entity.*;
-import com.soham.aiinterviewcoach.repository.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
+import com.soham.aiinterviewcoach.dto.ai.FinalReportResponse;
+import com.soham.aiinterviewcoach.dto.ai.MetricEvaluationResponse;
+import com.soham.aiinterviewcoach.dto.evaluation.AnswerSubmitRequest;
+import com.soham.aiinterviewcoach.dto.evaluation.EvaluationResponse;
+import com.soham.aiinterviewcoach.dto.evaluation.FinalReportDTO;
+import com.soham.aiinterviewcoach.entity.InterviewSession;
+import com.soham.aiinterviewcoach.entity.QnaEvaluation;
+import com.soham.aiinterviewcoach.entity.Report;
+import com.soham.aiinterviewcoach.entity.SessionDirective;
+import com.soham.aiinterviewcoach.entity.SessionQna;
+import com.soham.aiinterviewcoach.repository.InterviewSessionRepository;
+import com.soham.aiinterviewcoach.repository.QnaEvaluationRepository;
+import com.soham.aiinterviewcoach.repository.ReportRepository;
+import com.soham.aiinterviewcoach.repository.SessionDirectiveRepository;
+import com.soham.aiinterviewcoach.repository.SessionQnaRepository;
+import com.soham.aiinterviewcoach.repository.UserStatsRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -152,7 +163,7 @@ public class EvaluationService {
 
         // Fetch all answered QnAs
         List<SessionQna> qnaList = sessionQnaRepository
-                .findBySessionIdOrderByQuestionNumber(sessionId);
+                .findBySessionIdOrderByQuestionNumberAsc(sessionId);
 
         List<SessionQna> answeredQnas = qnaList.stream()
                 .filter(q -> q.getUserAnswer() != null)
