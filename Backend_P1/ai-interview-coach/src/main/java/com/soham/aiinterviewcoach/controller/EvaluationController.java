@@ -1,47 +1,50 @@
 package com.soham.aiinterviewcoach.controller;
 
 import com.soham.aiinterviewcoach.dto.evaluation.*;
+import com.soham.aiinterviewcoach.security.AuthenticatedUserProvider;
 import com.soham.aiinterviewcoach.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users/{userId}/interviews/{sessionId}")
+@RequestMapping("/api/users/me/interviews/{sessionId}")
 @RequiredArgsConstructor
 public class EvaluationController {
 
     private final EvaluationService evaluationService;
+    private final AuthenticatedUserProvider userProvider;
 
     @PostMapping("/questions/{qnaId}/answer")
     public ResponseEntity<EvaluationResponse> submitAnswer(
-            @PathVariable Long userId,
+            Authentication auth,
             @PathVariable Long sessionId,
             @PathVariable Long qnaId,
             @RequestBody AnswerSubmitRequest request
     ) {
         return ResponseEntity.ok(
-                evaluationService.submitAnswer(userId, sessionId, qnaId, request)
+                evaluationService.submitAnswer(userProvider.getUserId(auth), sessionId, qnaId, request)
         );
     }
 
     @PostMapping("/complete")
     public ResponseEntity<FinalReportDTO> complete(
-            @PathVariable Long userId,
+            Authentication auth,
             @PathVariable Long sessionId
     ) {
         return ResponseEntity.ok(
-                evaluationService.completeInterview(userId, sessionId)
+                evaluationService.completeInterview(userProvider.getUserId(auth), sessionId)
         );
     }
 
     @GetMapping("/report")
     public ResponseEntity<FinalReportDTO> getReport(
-            @PathVariable Long userId,
+            Authentication auth,
             @PathVariable Long sessionId
     ) {
         return ResponseEntity.ok(
-                evaluationService.getReport(userId, sessionId)
+                evaluationService.getReport(userProvider.getUserId(auth), sessionId)
         );
     }
 }

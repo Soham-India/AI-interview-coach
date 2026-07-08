@@ -1,46 +1,59 @@
 package com.soham.aiinterviewcoach.controller;
 
 import com.soham.aiinterviewcoach.dto.user.*;
+import com.soham.aiinterviewcoach.security.AuthenticatedUserProvider;
 import com.soham.aiinterviewcoach.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/users/me")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticatedUserProvider userProvider;
 
-    @GetMapping("/{userId}/profile")
-    public ResponseEntity<UserResponse> getProfile(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.getProfile(userId));
+    @GetMapping("/profile")
+    public ResponseEntity<UserResponse> getProfile(Authentication auth) {
+        return ResponseEntity.ok(
+                userService.getProfile(userProvider.getUserId(auth))
+        );
     }
 
-    @PatchMapping("/{userId}/profile")
+    @PatchMapping("/profile")
     public ResponseEntity<UserResponse> updateProfile(
-            @PathVariable Long userId,
+            Authentication auth,
             @RequestBody ProfileUpdateRequest request
     ) {
-        return ResponseEntity.ok(userService.updateProfile(userId, request));
+        return ResponseEntity.ok(
+                userService.updateProfile(userProvider.getUserId(auth), request)
+        );
     }
 
-    @GetMapping("/{userId}/stats")
-    public ResponseEntity<UserStatsResponse> getStats(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.getUserStats(userId));
+    @GetMapping("/stats")
+    public ResponseEntity<UserStatsResponse> getStats(Authentication auth) {
+        return ResponseEntity.ok(
+                userService.getUserStats(userProvider.getUserId(auth))
+        );
     }
 
-    @GetMapping("/{userId}/preferences")
-    public ResponseEntity<UserPreferencesDTO> getPreferences(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.getPreferences(userId));
+    @GetMapping("/preferences")
+    public ResponseEntity<UserPreferencesDTO> getPreferences(Authentication auth) {
+        return ResponseEntity.ok(
+                userService.getPreferences(userProvider.getUserId(auth))
+        );
     }
 
-    @PatchMapping("/{userId}/preferences")
+    @PatchMapping("/preferences")
     public ResponseEntity<UserPreferencesDTO> updatePreferences(
-            @PathVariable Long userId,
+            Authentication auth,
             @RequestBody UserPreferencesDTO request
     ) {
-        return ResponseEntity.ok(userService.updatePreferences(userId, request));
+        return ResponseEntity.ok(
+                userService.updatePreferences(userProvider.getUserId(auth), request)
+        );
     }
 }

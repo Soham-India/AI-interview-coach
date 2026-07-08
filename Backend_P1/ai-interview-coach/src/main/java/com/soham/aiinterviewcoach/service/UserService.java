@@ -1,5 +1,6 @@
 package com.soham.aiinterviewcoach.service;
 
+import com.soham.aiinterviewcoach.dto.auth.AuthResponse;
 import com.soham.aiinterviewcoach.dto.auth.LoginRequest;
 import com.soham.aiinterviewcoach.dto.auth.RegisterRequest;
 import com.soham.aiinterviewcoach.dto.user.ProfileUpdateRequest;
@@ -12,14 +13,19 @@ import com.soham.aiinterviewcoach.entity.UserStats;
 import com.soham.aiinterviewcoach.repository.UserPreferencesRepository;
 import com.soham.aiinterviewcoach.repository.UserRepository;
 import com.soham.aiinterviewcoach.repository.UserStatsRepository;
+import com.soham.aiinterviewcoach.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +35,13 @@ public class UserService {
     private final UserStatsRepository userStatsRepository;
     private final UserPreferencesRepository userPreferencesRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     private static final SecureRandom RANDOM = new SecureRandom();
 
 
     @Transactional
-    public UserResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.email())) {
             throw new ResponseStatusException(
@@ -89,30 +97,33 @@ public class UserService {
 
         userPreferencesRepository.save(preferences);
 
-        return mapToUserResponse(savedUser);
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                savedUser.getEmail(), savedUser.getPasswordHash(), Collections.emptyList()
+        );
+
+        String token = jwtService.generateToken(userDetails, savedUser.getId());
+        return new AuthResponse(token, mapToUserResponse(savedUser));
     }
 
-    public UserResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(), request.password()
+                )
+        );
 
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.UNAUTHORIZED,
-                                "Invalid email or password"
-                        )
-                );
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED, "Invalid credentials"
+                ));
 
-        if (!passwordEncoder.matches(
-                request.password(),
-                user.getPasswordHash()
-        )) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Invalid email or password"
-            );
-        }
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                user.getEmail(), user.getPasswordHash(), Collections.emptyList()
+        );
 
-        return mapToUserResponse(user);
+        String token = jwtService.generateToken(userDetails, user.getId());
+        return new AuthResponse(token, mapToUserResponse(user));
     }
 
 

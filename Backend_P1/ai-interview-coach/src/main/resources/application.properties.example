@@ -30,3 +30,10 @@ spring.ai.google.genai.api.key=YOUR_GEMINI_API_KEY
 cors.allowed.origins=http://localhost:5173
 
 spring.jpa.open-in-view=false
+
+# ============================================================
+# JWT
+# ============================================================
+jwt.secret=your-super-secret-key-minimum-32-characters-long
+jwt.expiration=86400000
+#86400000 = one day
