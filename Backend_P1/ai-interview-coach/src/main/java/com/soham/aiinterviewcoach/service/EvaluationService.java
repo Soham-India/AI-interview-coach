@@ -175,7 +175,8 @@ public class EvaluationService {
             );
         }
 
-        // Compute overall score as average of per-question scores
+
+        // Compute overall score as average of per-question scores  
         BigDecimal overallScore = answeredQnas.stream()
                 .filter(q -> q.getOverallScore() != null)
                 .map(SessionQna::getOverallScore)
