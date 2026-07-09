@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.soham.aiinterviewcoach.security.AuthenticatedUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,11 +97,11 @@ public class UserService {
 
         userPreferencesRepository.save(preferences);
 
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                savedUser.getEmail(), savedUser.getPasswordHash(), Collections.emptyList()
+        AuthenticatedUser principal = new AuthenticatedUser(
+                savedUser.getId(), savedUser.getEmail(), savedUser.getPasswordHash()
         );
 
-        String token = jwtService.generateToken(userDetails, savedUser.getId());
+        String token = jwtService.generateToken(principal, savedUser.getId());
         return new AuthResponse(token, mapToUserResponse(savedUser));
     }
 
@@ -118,11 +118,11 @@ public class UserService {
                         HttpStatus.UNAUTHORIZED, "Invalid credentials"
                 ));
 
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPasswordHash(), Collections.emptyList()
+        AuthenticatedUser principal = new AuthenticatedUser(
+                user.getId(), user.getEmail(), user.getPasswordHash()
         );
 
-        String token = jwtService.generateToken(userDetails, user.getId());
+        String token = jwtService.generateToken(principal, user.getId());
         return new AuthResponse(token, mapToUserResponse(user));
     }
 

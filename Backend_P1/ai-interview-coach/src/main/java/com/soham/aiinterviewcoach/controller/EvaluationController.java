@@ -1,11 +1,11 @@
 package com.soham.aiinterviewcoach.controller;
 
 import com.soham.aiinterviewcoach.dto.evaluation.*;
-import com.soham.aiinterviewcoach.security.AuthenticatedUserProvider;
+import com.soham.aiinterviewcoach.security.AuthenticatedUser;
 import com.soham.aiinterviewcoach.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,37 +14,36 @@ import org.springframework.web.bind.annotation.*;
 public class EvaluationController {
 
     private final EvaluationService evaluationService;
-    private final AuthenticatedUserProvider userProvider;
 
     @PostMapping("/questions/{qnaId}/answer")
     public ResponseEntity<EvaluationResponse> submitAnswer(
-            Authentication auth,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @PathVariable Long sessionId,
             @PathVariable Long qnaId,
             @RequestBody AnswerSubmitRequest request
     ) {
         return ResponseEntity.ok(
-                evaluationService.submitAnswer(userProvider.getUserId(auth), sessionId, qnaId, request)
+                evaluationService.submitAnswer(user.getId(), sessionId, qnaId, request)
         );
     }
 
     @PostMapping("/complete")
     public ResponseEntity<FinalReportDTO> complete(
-            Authentication auth,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @PathVariable Long sessionId
     ) {
         return ResponseEntity.ok(
-                evaluationService.completeInterview(userProvider.getUserId(auth), sessionId)
+                evaluationService.completeInterview(user.getId(), sessionId)
         );
     }
 
     @GetMapping("/report")
     public ResponseEntity<FinalReportDTO> getReport(
-            Authentication auth,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @PathVariable Long sessionId
     ) {
         return ResponseEntity.ok(
-                evaluationService.getReport(userProvider.getUserId(auth), sessionId)
+                evaluationService.getReport(user.getId(), sessionId)
         );
     }
 }
