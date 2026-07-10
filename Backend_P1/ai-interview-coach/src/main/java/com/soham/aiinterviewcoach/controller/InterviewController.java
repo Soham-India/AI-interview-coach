@@ -3,6 +3,7 @@ package com.soham.aiinterviewcoach.controller;
 import com.soham.aiinterviewcoach.dto.interview.*;
 import com.soham.aiinterviewcoach.security.AuthenticatedUser;
 import com.soham.aiinterviewcoach.service.InterviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class InterviewController {
     @PostMapping("/start")
     public ResponseEntity<InterviewSessionResponse> start(
             @AuthenticationPrincipal AuthenticatedUser user,
-            @RequestBody StartInterviewRequest request
+            @Valid @RequestBody StartInterviewRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(interviewService.startInterview(user.getId(), request));

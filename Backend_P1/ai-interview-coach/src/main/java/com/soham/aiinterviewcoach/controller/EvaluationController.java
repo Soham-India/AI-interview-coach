@@ -3,6 +3,7 @@ package com.soham.aiinterviewcoach.controller;
 import com.soham.aiinterviewcoach.dto.evaluation.*;
 import com.soham.aiinterviewcoach.security.AuthenticatedUser;
 import com.soham.aiinterviewcoach.service.EvaluationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +21,7 @@ public class EvaluationController {
             @AuthenticationPrincipal AuthenticatedUser user,
             @PathVariable Long sessionId,
             @PathVariable Long qnaId,
-            @RequestBody AnswerSubmitRequest request
+            @Valid @RequestBody AnswerSubmitRequest request
     ) {
         return ResponseEntity.ok(
                 evaluationService.submitAnswer(user.getId(), sessionId, qnaId, request)

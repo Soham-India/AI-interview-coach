@@ -4,6 +4,7 @@ import com.soham.aiinterviewcoach.dto.job.JobProfileRequest;
 import com.soham.aiinterviewcoach.dto.job.JobProfileResponse;
 import com.soham.aiinterviewcoach.security.AuthenticatedUser;
 import com.soham.aiinterviewcoach.service.JobProfileService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class JobProfileController {
     @PostMapping
     public ResponseEntity<JobProfileResponse> create(
             @AuthenticationPrincipal AuthenticatedUser user,
-            @RequestBody JobProfileRequest request
+            @Valid @RequestBody JobProfileRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(jobProfileService.createJobProfile(user.getId(), request));
