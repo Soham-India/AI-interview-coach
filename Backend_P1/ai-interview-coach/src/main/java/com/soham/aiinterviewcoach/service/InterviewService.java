@@ -65,11 +65,35 @@ public class InterviewService {
 
         InterviewSession savedSession = interviewSessionRepository.save(session);
 
-        // Bootstrap the very first question for the adaptive flow
-        generateAndSaveQuestionInternal(savedSession, jobProfile, userId);
+        int questionCount = request.questionCount() != null ? request.questionCount() : 5;
 
         // Fetch questions to build the initial full response payload
-        List<SessionQna> qnaList = sessionQnaRepository.findBySessionIdOrderByQuestionNumberAsc(savedSession.getId());
+        InterviewQuestionsResponse questionsResponse = geminiService.generateInterviewQuestions(
+                jobProfile.getJobTitle(),
+                jobProfile.getSkillsRequired(),
+                List.of(), // empty history — fresh session
+                userId,
+                questionCount
+        );
+
+        if (questionsResponse.questions() == null || questionsResponse.questions().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AI layer returned an empty question sequence.");
+        }
+
+        // Save all questions
+        List<SessionQna> qnaList = new java.util.ArrayList<>();
+        int qNum = 1;
+        for (var q : questionsResponse.questions()) {
+            if (qNum > questionCount) break;
+            SessionQna qna = new SessionQna();
+            qna.setSession(savedSession);
+            qna.setQuestionNumber(qNum++);
+            qna.setTopic(q.topic());
+            qna.setQuestionText(q.questionText());
+            qnaList.add(qna);
+        }
+
+        sessionQnaRepository.saveAll(qnaList);
 
         return mapToSessionResponse(savedSession, qnaList);
     }
@@ -151,7 +175,8 @@ public class InterviewService {
                 jobProfile.getJobTitle(),
                 jobProfile.getSkillsRequired(),
                 history,
-                userId
+                userId,
+                1 // Only generate 1 question when generating next question
         );
 
         if (aiResponse.questions() == null || aiResponse.questions().isEmpty()) {

@@ -1,193 +1,186 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Mail, Lock, RefreshCw, Terminal } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Terminal, Mail, Lock, ArrowRight, RefreshCw } from "lucide-react";
+import { setCredentials } from "../../redux/features/authSlice";
+import { authService } from "../../services/authService";
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    if (!email || !password) return;
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    setIsAuthenticating(true);
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError(null);
+        setIsLoading(true);
 
-    // Simulate mainframe encryption crack / authentication loop
-    setTimeout(() => {
-      setIsAuthenticating(false);
-      navigate("/initialize");
-    }, 1800);
-  };
+        try {
+            const data = await authService.login({ email, password });
 
-  return (
-    <div className="app-shell">
-      
-      {/* BACKGROUND MATRIX GRAPHICS & PULSING GRID */}
-      <div className="absolute inset-0 z-0 overflow-hidden opacity-30 pointer-events-none">
-        <div 
-          className="absolute inset-0" 
-          style={{ 
-            backgroundImage: "radial-gradient(circle at 2px 2px, #1A2436 1px, transparent 0)", 
-            backgroundSize: "40px 40px" 
-          }} 
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-neon-blue/5 to-transparent animate-pulse" />
-      </div>
+            dispatch(setCredentials({
+                token: data.token,
+                user: data.user,
+            }));
 
-      {/* FIXED CONTEXTUAL TOP NAVIGATION BAR (No bottom border as per design directives) */}
-      {/* <header className="flex justify-between items-center px-margin-edge h-20 w-full absolute top-0 left-0 z-50 select-none">
-        <div className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
-          AI INTERVIEW COACH
+            navigate("/initialize");
+
+        } catch (err) {
+            setError(
+                err.response?.data?.message || "Invalid email or password"
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative flex items-center justify-center selection:bg-neon-blue selection:text-abyss">
+
+            {/* Background */}
+            <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none z-0" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#050b14_95%)] pointer-events-none z-0" />
+
+            {/* Side telemetry — left */}
+            <aside className="fixed left-8 top-1/2 -translate-y-1/2 z-10 hidden xl:flex flex-col items-center space-y-12 opacity-40 select-none pointer-events-none">
+                <div className="[writing-mode:vertical-rl] rotate-180 font-mono text-[10px] tracking-[0.4em] text-steel uppercase animate-pulse">
+                    OPERATOR_AUTHENTICATION // SECURE_CHANNEL
+                </div>
+                <div className="w-px h-24 bg-frame" />
+                <div className="[writing-mode:vertical-rl] rotate-180 font-mono text-[10px] tracking-[0.4em] text-neon-blue uppercase font-bold">
+                    ENCRYPTION: AES-256
+                </div>
+            </aside>
+
+            {/* Side telemetry — right */}
+            <aside className="fixed right-8 top-1/2 -translate-y-1/2 z-10 hidden xl:flex flex-col items-center space-y-12 opacity-40 select-none pointer-events-none">
+                <div className="[writing-mode:vertical-rl] font-mono text-[10px] tracking-[0.4em] text-steel uppercase font-bold">
+                    LATENCY: 14MS
+                </div>
+                <div className="w-px h-24 bg-frame" />
+                <div className="[writing-mode:vertical-rl] font-mono text-[10px] tracking-[0.4em] text-steel uppercase animate-pulse">
+                    STATUS: AWAITING_CREDENTIALS
+                </div>
+            </aside>
+
+            {/* Main card */}
+            <main className="relative z-10 w-full max-w-xl px-4">
+                <div className="bg-panel/90 border border-neon-blue/40 shadow-[0_0_40px_rgba(0,136,255,0.15)] p-10 relative backdrop-blur-md">
+
+                    {/* Corner accents */}
+                    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-neon-blue -translate-x-0.5 -translate-y-0.5" />
+                    <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-neon-blue translate-x-0.5 -translate-y-0.5" />
+                    <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-neon-blue -translate-x-0.5 translate-y-0.5" />
+                    <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-neon-blue translate-x-0.5 translate-y-0.5" />
+
+                    {/* Header */}
+                    <div className="mb-8 text-center select-none">
+                        <h1 className="font-mono text-2xl md:text-3xl font-black text-pure-white uppercase tracking-tight mb-1 flex items-center justify-center gap-2">
+                            <Terminal size={18} className="text-neon-blue animate-pulse" />
+                            Access Terminal
+                        </h1>
+                        <p className="font-mono text-[10px] text-steel uppercase tracking-widest font-bold">
+                            Operator Credential Verification
+                        </p>
+                    </div>
+
+                    {/* Error */}
+                    {error && (
+                        <div className="mb-6 border border-danger/40 bg-danger/10 px-4 py-3 font-mono text-xs text-danger uppercase tracking-wider">
+                            ⚠ {error}
+                        </div>
+                    )}
+
+                    {/* Form */}
+                    <form onSubmit={handleLogin} className="space-y-6">
+
+                        {/* Email */}
+                        <div className="space-y-1.5 group/field">
+                            <label className="block font-mono text-[9px] text-neon-blue uppercase tracking-widest opacity-80 group-focus-within/field:opacity-100 font-bold select-none">
+                                01 // EMAIL ADDRESS
+                            </label>
+                            <div className="relative border-b border-frame focus-within:border-neon-blue transition-colors duration-300 flex items-center bg-abyss/30 px-2">
+                                <Mail size={14} className="text-steel/40 mr-2.5 shrink-0" />
+                                <input
+                                    type="email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="OPERATOR@GATEWAY.AI"
+                                    disabled={isLoading}
+                                    className="w-full bg-transparent border-none focus:ring-0 text-pure-white font-mono text-xs md:text-sm py-3 px-0 placeholder:text-steel/40 tracking-[0.15em] outline-none uppercase"
+                                />
+                                <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-neon-blue transition-all duration-500 group-focus-within/field:w-full" />
+                            </div>
+                        </div>
+
+                        {/* Password */}
+                        <div className="space-y-1.5 group/field">
+                            <label className="block font-mono text-[9px] text-neon-blue uppercase tracking-widest opacity-80 group-focus-within/field:opacity-100 font-bold select-none">
+                                02 // PASSWORD
+                            </label>
+                            <div className="relative border-b border-frame focus-within:border-neon-blue transition-colors duration-300 flex items-center bg-abyss/30 px-2">
+                                <Lock size={14} className="text-steel/40 mr-2.5 shrink-0" />
+                                <input
+                                    type="password"
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••••••"
+                                    disabled={isLoading}
+                                    className="w-full bg-transparent border-none focus:ring-0 text-pure-white font-mono text-xs md:text-sm py-3 px-0 placeholder:text-steel/40 tracking-[0.15em] outline-none"
+                                />
+                                <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-neon-blue transition-all duration-500 group-focus-within/field:w-full" />
+                            </div>
+                        </div>
+
+                        {/* Submit */}
+                        <div className="pt-4 space-y-4">
+                            <button
+                                type="submit"
+                                disabled={isLoading || !email || !password}
+                                className="w-full h-14 border border-neon-blue bg-neon-blue/5 group/btn relative overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(0,136,255,0.25)] button-cut cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                            >
+                                <div className="absolute inset-0 bg-neon-blue/10 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />
+                                <span className="relative z-10 font-mono text-xs font-black text-pure-white uppercase tracking-[0.25em] flex items-center justify-center gap-2">
+                                    {isLoading ? (
+                                        <>
+                                            <RefreshCw size={14} className="animate-spin" />
+                                            AUTHENTICATING...
+                                        </>
+                                    ) : (
+                                        <>
+                                            AUTHENTICATE
+                                            <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                                        </>
+                                    )}
+                                </span>
+                            </button>
+
+                            <div className="text-center">
+                                <Link
+                                    to="/register"
+                                    className="font-mono text-[10px] text-steel hover:text-pure-white uppercase tracking-[0.2em] transition-colors duration-300 inline-flex items-center gap-2"
+                                >
+                                    NO ACCOUNT? INITIALIZE PROTOCOL
+                                </Link>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                {/* Footer metadata */}
+                <div className="mt-6 flex justify-between items-center px-2 opacity-30 font-mono text-[8px] uppercase tracking-widest text-steel/80 select-none pointer-events-none font-bold">
+                    <span>SYSTEM_STATUS: NOMINAL</span>
+                    <span>© 2026 INTERVIEW_AI_SYSTEMS</span>
+                </div>
+            </main>
         </div>
-        <div className="font-mono text-xs uppercase tracking-widest text-steel hover:text-pure-white transition-colors duration-200 cursor-pointer">
-          [ MENU ]
-        </div>
-      </header> */}
-
-      {/* LEFT SIDE VERTICAL TELEMETRY PERIPHERALS */}
-      <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-12 z-20 hidden md:flex select-none pointer-events-none">
-        <div className="font-mono text-[10px] text-neon-blue uppercase tracking-[0.5em] [writing-mode:vertical-lr] rotate-180 font-bold">
-          SYSTEM_STATUS: ACTIVE
-        </div>
-        <div className="font-mono text-[10px] text-steel/60 uppercase tracking-[0.5em] [writing-mode:vertical-lr] rotate-180 font-bold">
-          ENCRYPTION: AES-256
-        </div>
-      </div>
-
-      {/* RIGHT SIDE VERTICAL TELEMETRY PERIPHERALS */}
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-12 z-20 hidden md:flex select-none pointer-events-none">
-        <div className="font-mono text-[10px] text-neon-blue uppercase tracking-[0.5em] [writing-mode:vertical-lr] font-bold">
-          OPERATOR_ID: UNKNOWN
-        </div>
-        <div className="font-mono text-[10px] text-steel/60 uppercase tracking-[0.5em] [writing-mode:vertical-lr] font-bold">
-          LOCATION: SIM_CHAMBER_01
-        </div>
-      </div>
-
-      {/* CENTRAL ACCESS INTERFACE CORE */}
-      <main className="w-full h-full flex flex-col items-center justify-center p-6 relative z-10">
-        
-        {/* Core Stage Headers */}
-        <div className="mb-10 text-center select-none">
-          <p className="font-mono text-xs text-neon-blue mb-2 uppercase tracking-[0.25em] font-bold animate-pulse">
-            OPERATOR ACCESS PROTOCOL
-          </p>
-          <h1 className="text-3xl md:text-5xl font-black text-pure-white uppercase tracking-tight max-w-2xl leading-none">
-            ENTER THE SIMULATION CHAMBER
-          </h1>
-        </div>
-
-        {/* SHUTTERED AUTHENTICATION BOX */}
-        <div className="relative w-full max-w-lg p-10 md:p-12 bg-panel/80 backdrop-blur-md border border-neon-blue/20 shadow-[0_0_60px_rgba(0,136,255,0.05)]">
-          
-          {/* Outward-running crosshair laser lines */}
-          <div className="absolute -top-16 -bottom-16 left-0 w-px bg-gradient-to-b from-transparent via-neon-blue/30 to-transparent pointer-events-none" />
-          <div className="absolute -top-16 -bottom-16 right-0 w-px bg-gradient-to-b from-transparent via-neon-blue/30 to-transparent pointer-events-none" />
-          <div className="absolute -left-16 -right-16 top-0 h-px bg-gradient-to-r from-transparent via-neon-blue/30 to-transparent pointer-events-none" />
-          <div className="absolute -left-16 -right-16 bottom-0 h-px bg-gradient-to-r from-transparent via-neon-blue/30 to-transparent pointer-events-none" />
-
-          {/* Blueprint Target Coordinate Overlays */}
-          <div className="absolute -top-5 -left-5 font-mono text-[9px] text-neon-blue/40 select-none font-bold">X: 402.12</div>
-          <div className="absolute -top-5 -right-5 font-mono text-[9px] text-neon-blue/40 select-none font-bold">Y: 881.04</div>
-          <div className="absolute -bottom-5 -left-5 font-mono text-[9px] text-neon-blue/40 select-none font-bold">Z: 002.44</div>
-          <div className="absolute -bottom-5 -right-5 font-mono text-[9px] text-neon-blue/40 select-none font-bold">REF: ARCH_01</div>
-
-          {/* Lateral Vector Extenders */}
-          <div className="absolute top-1/2 -left-[160px] w-[160px] h-px bg-gradient-to-r from-transparent to-neon-blue/20 hidden lg:block pointer-events-none" />
-          <div className="absolute top-1/2 -right-[160px] w-[160px] h-px bg-gradient-to-l from-transparent to-neon-blue/20 hidden lg:block pointer-events-none" />
-
-          <h2 className="font-mono text-pure-white text-base md:text-lg mb-8 uppercase tracking-[0.3em] text-center font-black select-none flex items-center justify-center gap-2">
-            <Terminal size={14} className="text-neon-blue" /> OPERATOR LOGIN
-          </h2>
-
-          {/* LOGIN ACTIONS MATRIX */}
-          <form onSubmit={handleLoginSubmit} className="space-y-8">
-            
-            {/* Input Node 1: Email */}
-            <div className="relative group/input border-b border-frame focus-within:border-neon-blue transition-colors duration-300">
-              <label 
-                className="block font-mono text-[10px] text-steel uppercase tracking-wider font-bold mb-1 select-none" 
-                htmlFor="email"
-              >
-                Email Address
-              </label>
-              <div className="flex items-center bg-abyss/40 border-l-2 border-neon-blue/20 focus-within:border-neon-blue px-3 relative">
-                <Mail size={16} className="text-steel/50 mr-2 shrink-0" />
-                <input 
-                  type="email" 
-                  id="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="operator@domain.com" 
-                  required
-                  disabled={isAuthenticating}
-                  className="w-full bg-transparent border-none text-pure-white font-mono text-sm md:text-base focus:ring-0 placeholder-surface-variant/40 py-3 pl-1 outline-none"
-                />
-              </div>
-              {/* Dynamic animated underscore pulse */}
-              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-neon-blue transition-all duration-500 group-focus-within/input:w-full" />
-            </div>
-
-            {/* Input Node 2: Password */}
-            <div className="relative group/input border-b border-frame focus-within:border-neon-blue transition-colors duration-300">
-              <label 
-                className="block font-mono text-[10px] text-steel uppercase tracking-wider font-bold mb-1 select-none" 
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <div className="flex items-center bg-abyss/40 border-l-2 border-neon-blue/20 focus-within:border-neon-blue px-3 relative">
-                <Lock size={16} className="text-steel/50 mr-2 shrink-0" />
-                <input 
-                  type="password" 
-                  id="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••" 
-                  required
-                  disabled={isAuthenticating}
-                  className="w-full bg-transparent border-none text-pure-white font-mono text-sm md:text-base focus:ring-0 placeholder-surface-variant/40 py-3 pl-1 outline-none"
-                />
-              </div>
-              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-neon-blue transition-all duration-500 group-focus-within/input:w-full" />
-            </div>
-
-            {/* Ingestion Submit Button Cut */}
-            <div className="pt-4">
-              <button 
-                type="submit"
-                disabled={isAuthenticating || !email || !password}
-                className="w-full border-2 border-neon-blue text-neon-blue bg-neon-blue/5 font-mono text-xs font-black uppercase tracking-widest py-4.5 transition-all duration-500 hover:bg-neon-blue hover:text-abyss cursor-pointer flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(0,136,255,0.1)] hover:shadow-[0_0_30px_rgba(0,136,255,0.4)] button-cut"
-              >
-                {isAuthenticating ? (
-                  <>
-                    <RefreshCw size={14} className="animate-spin" strokeWidth={2.5} />
-                    DECRUNCHING CREDS...
-                  </>
-                ) : (
-                  "[ ENTER THE SIMULATOR ]"
-                )}
-              </button>
-            </div>
-
-            {/* Secondary Option Anchor Links */}
-            <div className="text-center pt-2 select-none">
-              <a 
-                href="#" 
-                className="font-mono text-[10px] text-steel hover:text-pure-white uppercase tracking-widest transition-colors duration-200 font-bold"
-              >
-                NEW OPERATOR? INITIALIZE REGISTRATION
-              </a>
-            </div>
-
-          </form>
-        </div>
-
-      </main>
-    </div>
-  );
+    );
 };
 
 export default Login;

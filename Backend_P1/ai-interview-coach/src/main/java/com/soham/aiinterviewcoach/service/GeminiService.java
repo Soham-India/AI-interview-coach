@@ -64,16 +64,17 @@ public class GeminiService {
             String jobTitle,
             String skillsRequired,
             List<SessionQna> history,
-            Long userId
+            Long userId,
+            int questionCount
     ) {
         String systemPrompt = """
                 You are an adversarial senior technical interviewer.
-                Generate exactly 1 technical interview question for the role described.
+                Generate exactly %d technical interview questions for the role described.
                 
                 Rules:
-                - The question must be specific to the job title and skills, not generic
+                - The questions must be specific to the job title and skills, not generic
                 - Review the history of questions already asked to avoid repeating topics
-                - Provide a clear topic tag
+                - Provide a clear topic tag for each question
                 - No yes/no questions — must require detailed explanation
                 
                 Respond ONLY in this exact JSON format, no markdown, no extra text:
@@ -85,7 +86,7 @@ public class GeminiService {
                         }
                     ]
                 }
-                """;
+                """.formatted(questionCount);
 
         String historyText = history == null || history.isEmpty() ? "No previous questions." : 
                 history.stream()

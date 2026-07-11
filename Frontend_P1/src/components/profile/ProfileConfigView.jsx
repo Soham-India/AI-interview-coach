@@ -1,18 +1,23 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Sliders, ShieldAlert, Paintbrush } from "lucide-react";
+import React, { useState } from "react";
+import { Sliders, ShieldAlert, Paintbrush, Save } from "lucide-react";
 import ConfigButton from "../ui/elements/ConfigButton";
-import { 
-  setInterviewLength, 
-  setDifficultyThreshold, 
-  setInterfaceTheme 
-} from "../../redux/features/profileSlice";
 
-const ProfileConfigView = () => {
-  const dispatch = useDispatch();
-  
-  // Connect cleanly to your centralized profile data fields
-  const { length, difficulty, theme } = useSelector((state) => state.profile);
+const ProfileConfigView = ({ preferences, onUpdate }) => {
+  const [length, setLength] = useState(preferences?.interviewLength || 5);
+  const [difficulty, setDifficulty] = useState(preferences?.difficulty || "MEDIUM");
+  const [theme, setTheme] = useState(preferences?.theme || "CYBER");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      await onUpdate({ interviewLength: length, difficulty, theme });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="w-full h-full flex flex-col justify-center space-y-10 xl:space-y-14">
@@ -45,7 +50,7 @@ const ProfileConfigView = () => {
               <ConfigButton
                 key={val}
                 isActive={length === val}
-                onClick={() => dispatch(setInterviewLength(val))}
+                onClick={() => setLength(val)}
               >
                 {val < 10 ? `0${val}` : val}
               </ConfigButton>
@@ -70,7 +75,7 @@ const ProfileConfigView = () => {
               <ConfigButton
                 key={diff}
                 isActive={difficulty === diff}
-                onClick={() => dispatch(setDifficultyThreshold(diff))}
+                onClick={() => setDifficulty(diff)}
               >
                 {diff}
               </ConfigButton>
@@ -95,12 +100,24 @@ const ProfileConfigView = () => {
               <ConfigButton
                 key={t}
                 isActive={theme === t}
-                onClick={() => dispatch(setInterfaceTheme(t))}
+                onClick={() => setTheme(t)}
               >
                 {t}
               </ConfigButton>
             ))}
           </div>
+        </div>
+
+        {/* ROW 4: SAVE BUTTON */}
+        <div className="flex justify-end pt-4">
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="h-12 px-8 border border-neon-blue bg-neon-blue/10 text-neon-blue font-mono text-sm font-bold uppercase tracking-widest hover:bg-neon-blue hover:text-abyss transition-all duration-300 button-cut flex items-center gap-2.5 cursor-pointer shadow-[0_0_15px_rgba(0,136,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Save size={16} />
+            {isSaving ? "SAVING..." : "SAVE CONFIGURATION"}
+          </button>
         </div>
 
       </div>

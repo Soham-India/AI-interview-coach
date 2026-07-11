@@ -219,6 +219,7 @@ public class EvaluationService {
         session.setRisk(reportResponse.risk());
         session.setStatus("COMPLETED");
         interviewSessionRepository.save(session);
+        log.info("Session {} marked as COMPLETED with score {}", sessionId, overallScoreInt);
 
         // Update user stats
         updateUserStats(userId, overallScoreInt);

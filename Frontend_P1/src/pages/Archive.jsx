@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Database, Activity } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
 import FadeInSection from "../components/ui/FadeInSection";
@@ -9,14 +9,49 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   updateVaultSearchQuery,
   selectFilteredVaultLogs,
+  selectArchiveState,
+  setArchiveLoading,
+  setArchiveError,
+  setVaultLogs,
 } from "../redux/features/archiveSlice";
+
+import { archiveService } from "../services/archiveService";
 
 const ArchiveVault = () => {
   const dispatch = useDispatch();
 
-  const searchQuery = useSelector((state) => state.archive.searchQuery);
-
+  const { searchQuery, isLoading, error } = useSelector(selectArchiveState);
   const filteredLogs = useSelector(selectFilteredVaultLogs);
+
+  useEffect(() => {
+    const fetchArchive = async () => {
+      try {
+        dispatch(setArchiveLoading());
+        const sessions = await archiveService.getAll();
+        
+        // Map backend DTO (ArchiveSessionResponse) to frontend UI model
+        const mappedLogs = sessions.map(session => ({
+          id: session.id,
+          reference: session.referenceCode || `MISSION_REF: ${session.id}`,
+          timestamp: new Date(session.createdAt).toLocaleDateString("en-GB", {
+            day: "2-digit", month: "2-digit", year: "numeric"
+          }).replace(/\//g, "."),
+          status: session.status,
+          score: session.overallScore,
+          role: session.jobTitle,
+          company: session.company,
+          sector: "SECTOR_00_CORE", // Defaulting for visual flavor
+        }));
+
+        dispatch(setVaultLogs(mappedLogs));
+      } catch (err) {
+        console.error("Failed to fetch archive:", err);
+        dispatch(setArchiveError(err.message || "Failed to load simulation logs"));
+      }
+    };
+
+    fetchArchive();
+  }, [dispatch]);
 
   return (
     <div className="app-shell">
@@ -90,7 +125,15 @@ const ArchiveVault = () => {
             <div className="absolute left-[21px] md:left-[37px] top-2 bottom-2 w-px bg-frame/60 z-0 pointer-events-none select-none" />
 
             <div className="w-full space-y-12 [transform-style:preserve-3d] pb-24 relative z-10">
-              {filteredLogs.length > 0 ? (
+              {isLoading ? (
+                <div className="text-center p-16 font-mono text-xs text-neon-blue uppercase select-none font-bold ml-12 md:ml-24 animate-pulse">
+                  // INITIALIZING VAULT UPLINK...
+                </div>
+              ) : error ? (
+                <div className="text-center p-16 font-mono text-xs text-danger uppercase select-none font-bold ml-12 md:ml-24 border border-dashed border-danger/30 bg-danger/5">
+                  // VAULT UPLINK FAILURE: {error}
+                </div>
+              ) : filteredLogs.length > 0 ? (
                 filteredLogs.map((log) => (
                   <VaultNode key={log.id} log={log} />
                 ))
@@ -109,4 +152,4 @@ const ArchiveVault = () => {
   );
 };
 
-export default ArchiveVault;
+export default ArchiveVault;

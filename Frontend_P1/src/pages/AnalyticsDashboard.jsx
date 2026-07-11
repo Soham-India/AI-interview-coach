@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar/Navbar";
 import FadeInSection from "../components/ui/FadeInSection";
 import AnalyticsHeroView from "../components/analytics/AnalyticsHeroView";
@@ -6,73 +6,162 @@ import AnalyticsSkillsView from "../components/analytics/AnalyticsSkillsView";
 import AnalyticsDistributionView from "../components/analytics/AnalyticsDistributionView";
 import AnalyticsInsightsView from "../components/analytics/AnalyticsInsightsView";
 import AnalyticsVerdictView from "../components/analytics/AnalyticsVerdictView";
-
-const MOCK_ANALYTICS_SUMMARY = {
-  totalInterviews: 24,
-  averageScore: 87,
-  bestPerformance: 96,
-  successRate: 78,
-  timelinePoints: [
-    { label: "SESSION 01", x: 0, y: 320, score: 76 },
-    { label: "SESSION 06", x: 250, y: 260, score: 84 },
-    { label: "SESSION 12", x: 500, y: 240, score: 88 },
-    { label: "SESSION 18", x: 750, y: 210, score: 92 },
-    { label: "CURRENT", x: 1000, y: 160, score: 96 }
-  ]
-};
-
-// ... your existing imports
+import { analyticsService } from "../services/analyticsService";
 
 const AnalyticsDashboard = () => {
-  return (
-    <div className="app-shell">
-      
-      <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none z-0" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#050b14_95%)] pointer-events-none z-0" />
-      
-      <Navbar isSimulation={false} />
 
-      {/* CHANGED: Changed h-screen to h-[calc(100vh-4.5rem)] to match section heights perfectly */}
-      <main className="h-[calc(100vh-4.5rem)] w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth mt-18 relative z-10">
-        
-        {/* VIEWPORT 1 */}
-        <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
-          <FadeInSection className="w-full">
-            <AnalyticsHeroView data={MOCK_ANALYTICS_SUMMARY} />
-          </FadeInSection>
-        </section>
+    const [summary, setSummary] = useState(null);
+    const [skills, setSkills] = useState(null);
+    const [distribution, setDistribution] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-        {/* VIEWPORT 2 */}
-        <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
-          <FadeInSection className="w-full">
-            <AnalyticsSkillsView />
-          </FadeInSection>
-        </section>
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            setIsLoading(true);
+            setError(null);
 
-        {/* VIEWPORT 3 */}
-        <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
-          <FadeInSection className="w-full">
-            <AnalyticsDistributionView />
-          </FadeInSection>
-        </section>
+            try {
+                const [summaryData, skillsData, distributionData] = await Promise.all([
+                    analyticsService.getSummary(),
+                    analyticsService.getSkills(),
+                    analyticsService.getDistribution(),
+                ]);
 
-        {/* VIEWPORT 4 */}
-        <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
-          <FadeInSection className="w-full">
-            <AnalyticsInsightsView />
-          </FadeInSection>
-        </section>
+                setSummary(summaryData);
+                setSkills(skillsData);
+                setDistribution(distributionData);
 
-        {/* VIEWPORT 5 */}
-        <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always relative">
-          <FadeInSection className="w-full h-full">
-            <AnalyticsVerdictView />
-          </FadeInSection>
-        </section>
+            } catch (err) {
+                setError(
+                    err.response?.data?.message || "Failed to load analytics."
+                );
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-      </main>
-    </div>
-  );
+        fetchAnalytics();
+    }, []);
+
+    // ── Loading ──────────────────────────────────────────────────
+    if (isLoading) {
+        return (
+            <div className="w-full h-screen bg-abyss flex items-center justify-center">
+                <div className="flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 border-t-2 border-l-2 border-neon-blue rounded-full animate-spin" />
+                    <p className="font-mono text-xs text-steel uppercase tracking-widest animate-pulse">
+                        LOADING TELEMETRY STREAM...
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    // ── Error ────────────────────────────────────────────────────
+    if (error) {
+        return (
+            <div className="w-full h-screen bg-abyss flex items-center justify-center">
+                <div className="text-center space-y-4">
+                    <p className="font-mono text-sm text-danger uppercase tracking-wider">
+                        ⚠ {error}
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    // ── Empty state ──────────────────────────────────────────────
+    if (summary?.totalInterviews === 0) {
+        return (
+            <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative">
+                <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none z-0" />
+                <Navbar isSimulation={false} />
+                <div className="h-[calc(100vh-4.5rem)] mt-18 flex flex-col items-center justify-center gap-6">
+                    <p className="font-mono text-xs text-steel uppercase tracking-widest">
+                        // NO SIMULATION CYCLES RECORDED
+                    </p>
+                    <p className="font-mono text-[10px] text-steel/40 uppercase tracking-widest">
+                        Complete your first interview to unlock analytics
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    // ── Build data shapes expected by child components ───────────
+    const heroData = {
+        totalInterviews: summary.totalInterviews,
+        averageScore: summary.averageScore,
+        bestPerformance: summary.bestScore,
+        successRate: summary.successRate,
+        timelinePoints: summary.timeline.map((point, index) => ({
+            label: point.label,
+            x: index * (1000 / Math.max(summary.timeline.length - 1, 1)),
+            y: 400 - (point.score / 100) * 360,
+            score: point.score,
+        })),
+    };
+
+    const skillsData = [
+        { name: "Technical Depth", targetValue: skills.technicalScore },
+        { name: "Communication", targetValue: skills.communicationScore },
+        { name: "Confidence", targetValue: skills.confidenceScore },
+        { name: "Structure", targetValue: skills.structureScore },
+    ];
+
+    return (
+        <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative selection:bg-neon-blue selection:text-abyss">
+
+            {/* Background */}
+            <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none z-0" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#050b14_95%)] pointer-events-none z-0" />
+
+            <Navbar isSimulation={false} />
+
+            <main className="h-[calc(100vh-4.5rem)] w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth mt-18 relative z-10">
+
+                {/* VIEWPORT 1: Hero metrics + timeline */}
+                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
+                    <FadeInSection className="w-full">
+                        <AnalyticsHeroView data={heroData} />
+                    </FadeInSection>
+                </section>
+
+                {/* VIEWPORT 2: Skill breakdown */}
+                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
+                    <FadeInSection className="w-full">
+                        <AnalyticsSkillsView skills={skillsData} />
+                    </FadeInSection>
+                </section>
+
+                {/* VIEWPORT 3: Topic distribution */}
+                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
+                    <FadeInSection className="w-full">
+                        <AnalyticsDistributionView distribution={distribution} />
+                    </FadeInSection>
+                </section>
+
+                {/* VIEWPORT 4: AI Insights */}
+                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
+                    <FadeInSection className="w-full">
+                        <AnalyticsInsightsView
+                            averageScore={summary.averageScore}
+                            totalInterviews={summary.totalInterviews}
+                        />
+                    </FadeInSection>
+                </section>
+
+                {/* VIEWPORT 5: Verdict CTA */}
+                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always relative">
+                    <FadeInSection className="w-full h-full">
+                        <AnalyticsVerdictView />
+                    </FadeInSection>
+                </section>
+
+            </main>
+        </div>
+    );
 };
 
-export default AnalyticsDashboard;
+export default AnalyticsDashboard;

@@ -1,28 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Cpu } from "lucide-react";
 
-const INITIAL_SKILLS = [
-  { name: "Communication", targetValue: 91 },
-  { name: "Technical Depth", targetValue: 82 },
-  { name: "Problem Solving", targetValue: 95 },
-  { name: "Leadership", targetValue: 71 },
-];
-
-const AnalyticsSkillsView = () => {
-  const [skills, setSkills] = useState(INITIAL_SKILLS.map(s => ({ ...s, current: 0 })));
+const AnalyticsSkillsView = ({ skills = [] }) => {
+  const [animatedSkills, setAnimatedSkills] = useState(
+    skills.map(s => ({ ...s, current: 0 }))
+  );
 
   // Smooth fill trigger cascade simulation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSkills(
-        INITIAL_SKILLS.map((skill) => ({
-          ...skill,
-          current: skill.targetValue,
-        }))
+      setAnimatedSkills(
+        skills.map(skill => ({ ...skill, current: skill.targetValue }))
       );
     }, 150);
     return () => clearTimeout(timer);
-  }, []);
+  }, [skills]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center w-full h-full">
@@ -39,7 +31,7 @@ const AnalyticsSkillsView = () => {
         </div>
 
         <div className="space-y-6 md:space-y-8">
-          {skills.map((skill, index) => (
+          {animatedSkills.map((skill, index) => (
             <div key={index} className="group">
               <div className="flex justify-between mb-2 select-none">
                 <span className="font-mono text-xs text-steel uppercase font-bold tracking-wider group-hover:text-pure-white transition-colors">

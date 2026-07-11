@@ -2,6 +2,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "./redux/features/authSlice";
 
 import Navbar from "./components/navbar/Navbar";
 import Menu from "./components/navbar/Menu";
@@ -18,6 +19,11 @@ import RegistrationPortal from "./pages/auth/RegistrationPortal";
 import InitializePortal from "./pages/chamber/Initialization";
 import SimulationChamber from "./pages/chamber/SimulationChamber";
 import ArchiveVault from "./pages/Archive";           
+
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
 
 const App = () => {
   const isLoading = useSelector((state) => state.loading.isLoading);
@@ -40,17 +46,19 @@ const App = () => {
         <Route path="/register" element={<RegistrationPortal />} />
 
         {/* Workspace Operations Setup */}
-        <Route path="/initialize" element={<InitializePortal />} />
+        <Route path="/initialize" element={<ProtectedRoute><InitializePortal /></ProtectedRoute>} />
         
         {/* Protected Workspace Active Simulation Run */}
         <Route
           path="/interview"
           element={
-            isInitialized ? (
-              <SimulationChamber />
-            ) : (
-              <Navigate to="/initialize" replace />
-            )
+            <ProtectedRoute>
+              {isInitialized ? (
+                <SimulationChamber />
+              ) : (
+                <Navigate to="/initialize" replace />
+              )}
+            </ProtectedRoute>
           }
         />
 
@@ -58,18 +66,20 @@ const App = () => {
         <Route 
           path="/report" 
           element={
-            isInitialized ? (
-              <ReportDashboard />
-            ) : (
-              <Navigate to="/initialize" replace />
-            )
+            <ProtectedRoute>
+              {isInitialized ? (
+                <ReportDashboard />
+              ) : (
+                <Navigate to="/initialize" replace />
+              )}
+            </ProtectedRoute>
           } 
         />
 
         {/* Global Repositories & Performance Matrices */}
-        <Route path="/analytics" element={<AnalyticsDashboard />} />
-        <Route path="/archive" element={<ArchiveVault />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/analytics" element={<ProtectedRoute><AnalyticsDashboard /></ProtectedRoute>} />
+        <Route path="/archive" element={<ProtectedRoute><ArchiveVault /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         {/* Catch-All Fallback Redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,7 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Award, Trophy, Code, Terminal } from "lucide-react";
-import { selectOperatorIdentity } from "../../redux/features/profileSlice";
 
 // Helper map to resolve achievement string tokens to vector components dynamically
 const getAchievementIcon = (iconName) => {
@@ -17,10 +15,8 @@ const getAchievementIcon = (iconName) => {
   }
 };
 
-const ProfileHeaderView = () => {
-  // Extract your live identity packet directly from the global state store
-  const identity = useSelector(selectOperatorIdentity);
-  const { stats, achievements } = identity;
+const ProfileHeaderView = ({ user, onUpdate }) => {
+  const { stats, achievements = [] } = user;
 
   return (
     <div className="w-full space-y-6 xl:space-y-8">
@@ -32,8 +28,8 @@ const ProfileHeaderView = () => {
         <div className="w-32 h-32 md:w-40 md:h-40 border-2 border-neon-blue p-1 shrink-0 bg-panel/40 relative">
           <div className="w-full h-full relative overflow-hidden bg-surface-container-high">
             <img 
-              src={identity.avatarUrl} 
-              alt={identity.name} 
+              src={user.avatarUrl} 
+              alt={user.name} 
               className="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-500"
             />
           </div>
@@ -45,14 +41,14 @@ const ProfileHeaderView = () => {
             Operator Identity Profile // Verified
           </span>
           <h1 className="font-headline-xl text-4xl md:text-5xl lg:text-7xl font-black text-pure-white tracking-tighter uppercase leading-none break-all">
-            {identity.name}
+            {user.name}
           </h1>
           <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 pt-1">
             <span className="bg-neon-blue text-abyss px-4 py-1.5 font-mono text-sm md:text-base font-black tracking-widest select-none flex items-center gap-2 border border-neon-blue shadow-[0_0_15px_rgba(0,136,255,0.4)] uppercase button-cut">
-              CALLSIGN: "{identity.callsign}"
+              CALLSIGN: "{user.callsign}"
             </span>
             <span className="font-mono text-sm md:text-base text-steel uppercase tracking-wider font-bold">
-              {identity.role}
+              {user.role}
             </span>
           </div>
         </div>
@@ -103,7 +99,15 @@ const ProfileHeaderView = () => {
           </div>
 
           <div className="space-y-3 max-h-[220px] overflow-y-auto brutalist-scroll pr-1">
-            {achievements.map((achievement) => (
+            {achievements.length === 0 ? (
+              <div className="flex items-center gap-5 border border-frame bg-panel/30 p-4">
+                <Terminal size={20} className="text-steel/40 shrink-0" />
+                <div className="font-mono text-xs text-steel uppercase tracking-wider">
+                  No achievements unlocked yet. Complete interviews to earn medals.
+                </div>
+              </div>
+            ) : (
+              achievements.map((achievement) => (
               <div 
                 key={achievement.id}
                 className="flex items-center gap-5 border border-frame bg-panel/30 p-3 group hover:border-neon-blue/30 transition-colors duration-300"
@@ -120,7 +124,8 @@ const ProfileHeaderView = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
 
         </div>

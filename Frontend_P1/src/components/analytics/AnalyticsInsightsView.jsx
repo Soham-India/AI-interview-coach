@@ -1,7 +1,7 @@
 import React from "react";
 import { Download, Brain, Terminal } from "lucide-react";
 
-const AnalyticsInsightsView = () => {
+const AnalyticsInsightsView = ({ averageScore = 0, totalInterviews = 0 }) => {
   return (
     <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-16 items-center">
       
@@ -18,11 +18,7 @@ const AnalyticsInsightsView = () => {
 
         <div className="border-l-2 border-frame/60 pl-6 md:pl-8 space-y-4">
           <p className="font-mono text-sm md:text-base text-steel leading-[1.8] text-justify">
-            "Operator performance shows high-level mastery in{" "}
-            <span className="text-pure-white font-black drop-shadow-[0_0_10px_rgba(255,255,255,0.15)]">
-              structured problem solving
-            </span>
-            . The logic gates used for technical depth are optimized for system scale."
+            "Operator performance across <span className="text-pure-white font-black">{totalInterviews} sessions</span> shows an average index of <span className="text-pure-white font-black">{averageScore}</span>. The logic gates used for technical depth are optimized for system scale."
           </p>
           <p className="font-mono text-sm md:text-base text-steel leading-[1.8] text-justify">
             "However, the telemetry suggests a critical bottleneck in{" "}

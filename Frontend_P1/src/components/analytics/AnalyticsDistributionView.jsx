@@ -1,12 +1,6 @@
 import React from "react";
 import { PieChart, TrendingUp, ArrowUpRight } from "lucide-react";
 
-const DISTRIBUTION_DATA = [
-  { sector: "FRONTEND ARCHITECTURE", count: 12, ratio: "50%" },
-  { sector: "BACKEND SYSTEMS", count: 8, ratio: "33%" },
-  { sector: "SYSTEM DESIGN", count: 4, ratio: "17%" },
-];
-
 const DELTAS_DATA = [
   {
     increment: "+8",
@@ -20,7 +14,12 @@ const DELTAS_DATA = [
   },
 ];
 
-const AnalyticsDistributionView = () => {
+const AnalyticsDistributionView = ({ distribution = [] }) => {
+  const distributionData = distribution.map(item => ({
+    sector: item.topic,
+    count: item.count,
+    ratio: `${Math.round((item.count / distribution.reduce((a, b) => a + b.count, 0)) * 100)}%`,
+  }));
   return (
     <div className="w-full h-full grid grid-cols-1 lg:grid-cols-2 gap-gutter lg:gap-16 items-center">
       
@@ -38,7 +37,7 @@ const AnalyticsDistributionView = () => {
         </div>
 
         <div className="space-y-4">
-          {DISTRIBUTION_DATA.map((item, idx) => (
+          {distributionData.map((item, idx) => (
             <div 
               key={idx} 
               className="flex items-center justify-between border border-frame/50 bg-abyss/40 p-4 hover:bg-neon-blue/5 transition-colors duration-300 group/row"

@@ -8,20 +8,8 @@ const SKILLS_DATA = [
   { id: "04", name: "LEADERSHIP", score: 78.0 },
 ];
 
-const STRENGTHS = [
-  "Architecture Thinking",
-  "Clear Communication",
-  "Scalability Planning",
-  "Decision Frameworks",
-];
 
-const VULNERABILITIES = [
-  "Distributed Transactions",
-  "Failure Recovery",
-  "Deployment Rollbacks",
-];
-
-const TelemetryAndMatrixView = () => {
+const TelemetryAndMatrixView = ({ strengths = [], weaknesses = [] }) => {
   return (
     <div className="w-full h-full flex flex-col justify-between py-2 space-y-8 xl:space-y-12">
       
@@ -73,7 +61,7 @@ const TelemetryAndMatrixView = () => {
             STRENGTH_NODES
           </h4>
           <ul className="space-y-2.5">
-            {STRENGTHS.map((strength, idx) => (
+            {strengths.map((strength, idx) => (
               <li 
                 key={idx} 
                 className="font-mono text-sm border border-frame bg-abyss/40 p-3.5 flex justify-between items-center group-hover:border-neon-blue/30 transition-colors duration-300"
@@ -92,7 +80,7 @@ const TelemetryAndMatrixView = () => {
             EXPOSED_VULNS
           </h4>
           <ul className="space-y-2.5">
-            {VULNERABILITIES.map((vuln, idx) => (
+            {weaknesses.map((vuln, idx) => (
               <li 
                 key={idx} 
                 className="font-mono text-sm border border-frame bg-abyss/40 p-3.5 flex justify-between items-center group-hover:border-warning/30 transition-colors duration-300"
