@@ -62,6 +62,11 @@ const App = () => {
           }
         />
 
+        {/* Archive Report View — loads by sessionId from URL */}
+        <Route path="/report/:sessionId" element={
+          <ProtectedRoute><ReportDashboard /></ProtectedRoute>
+        } />
+
         {/* Session Evaluation Report Guard (Recommended Guard) */}
         <Route 
           path="/report" 

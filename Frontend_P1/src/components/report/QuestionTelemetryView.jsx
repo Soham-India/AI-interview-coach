@@ -10,12 +10,15 @@ const QuestionTelemetryView = ({ data, isLast }) => {
   const pulseBg = isStrong ? "bg-neon-blue" : "bg-warning";
 
   return (
-    <div className="pl-12 py-4 relative w-full h-full flex flex-col justify-center">
+    <div className="py-4 relative w-full h-full flex flex-col justify-center">
       
-      {/* TIMELINE INTERFACE NODE */}
-      <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 bg-abyss border-2 ${nodeBorder} rounded-full z-10 flex items-center justify-center select-none`}>
+      {/* TIMELINE INTERFACE NODE — positioned exactly on the vertical line */}
+      <div className={`absolute -left-12 top-1/2 -translate-y-1/2 w-[22px] h-[22px] bg-abyss border-2 ${nodeBorder} rounded-full z-10 flex items-center justify-center select-none`}>
         <div className={`w-2 h-2 ${pulseBg} rounded-full ${isStrong ? "animate-pulse" : ""}`} />
       </div>
+
+      {/* Content — padded away from the timeline line */}
+      <div className="pl-12">
 
       {/* COMPACT SUMMARY HEADER CARD */}
       <div className="border border-frame bg-panel/60 overflow-hidden flex flex-col justify-between flex-shrink-0">
@@ -96,6 +99,7 @@ const QuestionTelemetryView = ({ data, isLast }) => {
         </div>
       </div>
 
+      </div>
     </div>
   );
 };

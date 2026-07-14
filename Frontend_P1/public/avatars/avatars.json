@@ -1,0 +1,344 @@
+{
+  "humans": [
+    {
+      "id": "young-man-smile",
+      "displayName": "Young Man",
+      "path": "humans/young-man-smile.png"
+    },
+    {
+      "id": "business-woman",
+      "displayName": "Business Woman",
+      "path": "humans/business-woman.png"
+    },
+    {
+      "id": "teen-boy-red-sweater",
+      "displayName": "Teen Boy",
+      "path": "humans/teen-boy-red-sweater.png"
+    },
+    {
+      "id": "young-business-woman",
+      "displayName": "Young Business Woman",
+      "path": "humans/young-business-woman.png"
+    },
+    {
+      "id": "young-man-formal",
+      "displayName": "Young Man (Formal)",
+      "path": "humans/young-man-formal.png"
+    },
+    {
+      "id": "sikh-man-turban",
+      "displayName": "Sikh Man",
+      "path": "humans/sikh-man-turban.png"
+    },
+    {
+      "id": "elderly-man-glasses",
+      "displayName": "Elderly Man",
+      "path": "humans/elderly-man-glasses.png"
+    },
+    {
+      "id": "professional-man-glasses",
+      "displayName": "Professional Man",
+      "path": "humans/professional-man-glasses.png"
+    },
+    {
+      "id": "casual-young-man",
+      "displayName": "Casual Young Man",
+      "path": "humans/casual-young-man.png"
+    },
+    {
+      "id": "hoodie-boy-glasses",
+      "displayName": "Boy with Hoodie",
+      "path": "humans/hoodie-boy-glasses.png"
+    },
+    {
+      "id": "curly-haired-woman",
+      "displayName": "Curly-haired Woman",
+      "path": "humans/curly-haired-woman.png"
+    },
+    {
+      "id": "bearded-man",
+      "displayName": "Bearded Man",
+      "path": "humans/bearded-man.png"
+    },
+    {
+      "id": "executive-man-beard",
+      "displayName": "Executive",
+      "path": "humans/executive-man-beard.png"
+    }
+  ],
+
+  "robots": [
+    {
+      "id": "holographic-ai",
+      "displayName": "Holographic AI",
+      "path": "robots/holographic-ai.png"
+    },
+    {
+      "id": "helper-bot",
+      "displayName": "Helper Bot",
+      "path": "robots/helper-bot.png"
+    },
+    {
+      "id": "service-robot",
+      "displayName": "Service Robot",
+      "path": "robots/service-robot.png"
+    },
+    {
+      "id": "cute-assistant-bot",
+      "displayName": "Cute Assistant",
+      "path": "robots/cute-assistant-bot.png"
+    },
+    {
+      "id": "companion-bot",
+      "displayName": "Companion Bot",
+      "path": "robots/companion-bot.png"
+    },
+    {
+      "id": "neon-ai-bot",
+      "displayName": "Neon AI",
+      "path": "robots/neon-ai-bot.png"
+    },
+    {
+      "id": "smart-assistant-bot",
+      "displayName": "Smart Assistant",
+      "path": "robots/smart-assistant-bot.png"
+    }
+  ],
+
+  "animals": [
+    {
+      "id": "golden-retriever",
+      "displayName": "Golden Retriever",
+      "path": "animals/golden-retriever.png"
+    },
+    {
+      "id": "panda",
+      "displayName": "Panda",
+      "path": "animals/panda.png"
+    },
+    {
+      "id": "fox",
+      "displayName": "Fox",
+      "path": "animals/fox.png"
+    },
+    {
+      "id": "husky",
+      "displayName": "Husky",
+      "path": "animals/husky.png"
+    },
+    {
+      "id": "tiger",
+      "displayName": "Tiger",
+      "path": "animals/tiger.png"
+    },
+    {
+      "id": "elephant",
+      "displayName": "Elephant",
+      "path": "animals/elephant.png"
+    },
+    {
+      "id": "giraffe",
+      "displayName": "Giraffe",
+      "path": "animals/giraffe.png"
+    },
+    {
+      "id": "sloth",
+      "displayName": "Sloth",
+      "path": "animals/sloth.png"
+    },
+    {
+      "id": "red-fox",
+      "displayName": "Red Fox",
+      "path": "animals/red-fox.png"
+    },
+    {
+      "id": "gray-wolf",
+      "displayName": "Gray Wolf",
+      "path": "animals/gray-wolf.png"
+    },
+    {
+      "id": "lion",
+      "displayName": "Lion",
+      "path": "animals/lion.png"
+    },
+    {
+      "id": "golden-puppy",
+      "displayName": "Golden Puppy",
+      "path": "animals/golden-puppy.png"
+    },
+    {
+      "id": "rabbit",
+      "displayName": "Rabbit",
+      "path": "animals/rabbit.png"
+    },
+    {
+      "id": "deer",
+      "displayName": "Deer",
+      "path": "animals/deer.png"
+    },
+    {
+      "id": "hedgehog",
+      "displayName": "Hedgehog",
+      "path": "animals/hedgehog.png"
+    },
+    {
+      "id": "koala",
+      "displayName": "Koala",
+      "path": "animals/koala.png"
+    },
+    {
+      "id": "panda-face",
+      "displayName": "Panda Face",
+      "path": "animals/panda-face.png"
+    },
+    {
+      "id": "brown-bear",
+      "displayName": "Brown Bear",
+      "path": "animals/brown-bear.png"
+    },
+    {
+      "id": "tuxedo-cat",
+      "displayName": "Cat",
+      "path": "animals/tuxedo-cat.png"
+    },
+    {
+      "id": "squirrel",
+      "displayName": "Squirrel",
+      "path": "animals/squirrel.png"
+    },
+    {
+      "id": "chimpanzee",
+      "displayName": "Chimpanzee",
+      "path": "animals/chimpanzee.png"
+    },
+    {
+      "id": "gorilla",
+      "displayName": "Gorilla",
+      "path": "animals/gorilla.png"
+    },
+    {
+      "id": "zebra",
+      "displayName": "Zebra",
+      "path": "animals/zebra.png"
+    },
+    {
+      "id": "rhinoceros",
+      "displayName": "Rhinoceros",
+      "path": "animals/rhinoceros.png"
+    },
+    {
+      "id": "hippopotamus",
+      "displayName": "Hippopotamus",
+      "path": "animals/hippopotamus.png"
+    },
+    {
+      "id": "otter",
+      "displayName": "Otter",
+      "path": "animals/otter.png"
+    },
+    {
+      "id": "beaver",
+      "displayName": "Beaver",
+      "path": "animals/beaver.png"
+    },
+    {
+      "id": "badger",
+      "displayName": "Badger",
+      "path": "animals/badger.png"
+    }
+  ],
+
+  "birds": [
+    {
+      "id": "wise-owl",
+      "displayName": "Wise Owl",
+      "path": "birds/wise-owl.png"
+    },
+    {
+      "id": "penguin",
+      "displayName": "Penguin",
+      "path": "birds/penguin.png"
+    },
+    {
+      "id": "baby-penguin",
+      "displayName": "Baby Penguin",
+      "path": "birds/baby-penguin.png"
+    },
+    {
+      "id": "bald-eagle",
+      "displayName": "Bald Eagle",
+      "path": "birds/bald-eagle.png"
+    },
+    {
+      "id": "bald-eagle-profile",
+      "displayName": "Bald Eagle Profile",
+      "path": "birds/bald-eagle-profile.png"
+    },
+    {
+      "id": "puffin",
+      "displayName": "Puffin",
+      "path": "birds/puffin.png"
+    },
+    {
+      "id": "great-horned-owl",
+      "displayName": "Great Horned Owl",
+      "path": "birds/great-horned-owl.png"
+    },
+    {
+      "id": "blue-and-yellow-macaw",
+      "displayName": "Blue & Yellow Macaw",
+      "path": "birds/blue-and-yellow-macaw.png"
+    },
+    {
+      "id": "flamingo",
+      "displayName": "Flamingo",
+      "path": "birds/flamingo.png"
+    }
+  ],
+
+  "insects": [
+    {
+      "id": "ladybug",
+      "displayName": "Ladybug",
+      "path": "insects/ladybug.png"
+    },
+    {
+      "id": "bee",
+      "displayName": "Bee",
+      "path": "insects/bee.png"
+    },
+    {
+      "id": "monarch-butterfly",
+      "displayName": "Monarch Butterfly",
+      "path": "insects/monarch-butterfly.png"
+    },
+    {
+      "id": "caterpillar",
+      "displayName": "Caterpillar",
+      "path": "insects/caterpillar.png"
+    },
+    {
+      "id": "grasshopper",
+      "displayName": "Grasshopper",
+      "path": "insects/grasshopper.png"
+    },
+    {
+      "id": "dragonfly",
+      "displayName": "Dragonfly",
+      "path": "insects/dragonfly.png"
+    }
+  ],
+
+  "marine": [
+    {
+      "id": "dolphin",
+      "displayName": "Dolphin",
+      "path": "marine/dolphin.png"
+    },
+    {
+      "id": "sea-turtle",
+      "displayName": "Sea Turtle",
+      "path": "marine/sea-turtle.png"
+    }
+  ]
+}

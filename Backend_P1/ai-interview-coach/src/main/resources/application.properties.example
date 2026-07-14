@@ -23,6 +23,12 @@ spring.jpa.properties.hibernate.format_sql=true
 # AI API KEY
 # ============================================================
 spring.ai.google.genai.api.key=YOUR_GEMINI_API_KEY
+spring.ai.google.genai.chat.options.model=gemini-2.0-flash
+# ── Retry config for 429 rate limits ──
+spring.ai.retry.max-attempts=3
+spring.ai.retry.initial-interval=15000
+spring.ai.retry.multiplier=2.0
+spring.ai.retry.on-http-codes=429
 
 # ============================================================
 # CORS

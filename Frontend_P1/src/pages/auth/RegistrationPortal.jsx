@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Terminal, Mail, Lock, ShieldCheck, User, Shield, Cpu, ArrowRight, RefreshCw } from "lucide-react";
 import { setCredentials } from "../../redux/features/authSlice";
 import { authService } from "../../services/authService";
+import AvatarSelectScreen from "../../components/ui/AvatarSelectScreen";
 
 const RegistrationPortal = () => {
     const navigate = useNavigate();
@@ -16,11 +17,15 @@ const RegistrationPortal = () => {
     const [callsign, setCallsign] = useState("");
     const [role, setRole] = useState("");
     
+    const [step, setStep] = useState(1); // 1 = form, 2 = avatar select
+    const [avatarUrl, setAvatarUrl] = useState("/avatars/insects/bee.png");
+    const [pendingData, setPendingData] = useState(null);
+
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [fieldErrors, setFieldErrors] = useState({});
 
-    const handleRegister = async (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
         setError(null);
         setFieldErrors({});
@@ -30,15 +35,26 @@ const RegistrationPortal = () => {
             return;
         }
 
+        // Save form data and move to avatar step
+        setPendingData({
+            name,
+            email,
+            password,
+            callsign: callsign.trim() === "" ? null : callsign,
+            role: role.trim() === "" ? null : role,
+        });
+        setStep(2);
+    };
+
+    const handleAvatarConfirm = async (selectedAvatarUrl) => {
+        setAvatarUrl(selectedAvatarUrl);
         setIsLoading(true);
+        setError(null);
 
         try {
             const data = await authService.register({
-                name,
-                email,
-                password,
-                callsign: callsign.trim() === "" ? null : callsign,
-                role: role.trim() === "" ? null : role
+                ...pendingData,
+                avatarUrl: selectedAvatarUrl,
             });
 
             dispatch(setCredentials({
@@ -48,6 +64,8 @@ const RegistrationPortal = () => {
 
             navigate("/initialize");
         } catch (err) {
+            // Go back to form on error
+            setStep(1);
             if (err.response?.data?.validationErrors) {
                 setFieldErrors(err.response.data.validationErrors);
                 setError("Validation parameters failed. Check field inputs.");
@@ -58,6 +76,16 @@ const RegistrationPortal = () => {
             setIsLoading(false);
         }
     };
+
+    if (step === 2) {
+        return (
+            <AvatarSelectScreen
+                onConfirm={handleAvatarConfirm}
+                initialAvatar={avatarUrl}
+                isSaving={isLoading}
+            />
+        );
+    }
 
     return (
         <div className="w-full min-h-screen bg-abyss text-pure-white py-12 px-4 relative flex items-center justify-center selection:bg-neon-blue selection:text-abyss">
@@ -109,7 +137,7 @@ const RegistrationPortal = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleRegister} className="space-y-6">
+                    <form onSubmit={handleFormSubmit} className="space-y-6">
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             
@@ -251,17 +279,10 @@ const RegistrationPortal = () => {
                             >
                                 <div className="absolute inset-0 bg-neon-blue/10 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />
                                 <span className="relative z-10 font-mono text-xs font-black text-pure-white uppercase tracking-[0.25em] flex items-center justify-center gap-2">
-                                    {isLoading ? (
-                                        <>
-                                            <RefreshCw size={14} className="animate-spin" />
-                                            INITIALIZING MATRIX...
-                                        </>
-                                    ) : (
-                                        <>
-                                            EXECUTE SIGNUP PROTOCOL
-                                            <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-                                        </>
-                                    )}
+                                    <>
+                                        CONTINUE TO IDENTITY SELECTION
+                                        <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                                    </>
                                 </span>
                             </button>
 

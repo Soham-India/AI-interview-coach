@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Play, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -7,10 +7,28 @@ import { setInterviewConfig } from "../../redux/features/interviewSlice";
 import { startLoading, stopLoading } from "../../redux/features/loadingSlice";
 import { jobService } from "../../services/jobService";
 import { interviewService } from "../../services/interviewService";
+import { userService } from "../../services/userService";
 
 const InitializePortal = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const [questionCount, setQuestionCount] = useState(5);
+    const [interviewLength, setInterviewLength] = useState(10);
+
+    // Load user preferences on mount
+    useEffect(() => {
+        const loadPrefs = async () => {
+            try {
+                const prefs = await userService.getPreferences();
+                setQuestionCount(prefs.questionCount || 5);
+                setInterviewLength(prefs.interviewLength || 10);
+            } catch {
+                // use defaults silently
+            }
+        };
+        loadPrefs();
+    }, []);
 
     const [jobTitle, setJobTitle] = useState("");
     const [company, setCompany] = useState("");
@@ -39,7 +57,7 @@ const InitializePortal = () => {
             // Step 2: Start the interview session
             const session = await interviewService.start(
                 jobProfile.id,
-                5
+                questionCount  // uses preference value
             );
 
             // Step 3: Store session data in Redux
@@ -49,6 +67,7 @@ const InitializePortal = () => {
                 sessionId: session.sessionId,
                 questions: session.questions,
                 currentQuestionIndex: 0,
+                interviewLengthMinutes: interviewLength, // store duration in Redux
             }));
 
             navigate("/interview");

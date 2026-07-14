@@ -92,8 +92,8 @@ public class UserService {
         UserPreferences preferences = new UserPreferences();
         preferences.setUser(savedUser);
         preferences.setInterviewLength(10);
-        preferences.setDifficulty("ADAPTIVE");
-        preferences.setTheme("CYBER");
+        preferences.setQuestionCount(5);
+        preferences.setDifficulty("MEDIUM"); // auto-calculated default
 
         userPreferencesRepository.save(preferences);
 
@@ -175,7 +175,7 @@ public class UserService {
         return new UserPreferencesDTO(
                 preferences.getInterviewLength(),
                 preferences.getDifficulty(),
-                preferences.getTheme()
+                preferences.getQuestionCount()
         );
     }
 
@@ -195,29 +195,25 @@ public class UserService {
                         );
 
         if (request.interviewLength() != null) {
-            preferences.setInterviewLength(
-                    request.interviewLength()
-            );
+            preferences.setInterviewLength(request.interviewLength());
+        }
+        if (request.questionCount() != null) {
+            preferences.setQuestionCount(request.questionCount());
         }
 
-        if (request.difficulty() != null) {
-            preferences.setDifficulty(
-                    request.difficulty()
-            );
-        }
-
-        if (request.theme() != null) {
-            preferences.setTheme(
-                    request.theme()
-            );
-        }
+        // Auto-calculate difficulty from length + count
+        String autoDifficulty = calculateDifficulty(
+                preferences.getInterviewLength(),
+                preferences.getQuestionCount()
+        );
+        preferences.setDifficulty(autoDifficulty);
 
         userPreferencesRepository.save(preferences);
 
         return new UserPreferencesDTO(
                 preferences.getInterviewLength(),
                 preferences.getDifficulty(),
-                preferences.getTheme()
+                preferences.getQuestionCount()
         );
     }
 
@@ -278,5 +274,17 @@ public class UserService {
                 user.getRole(),
                 user.getAvatarUrl()
         );
+    }
+
+    private String calculateDifficulty(Integer length, Integer questionCount) {
+        if (length == null || questionCount == null) return "ADAPTIVE";
+
+        if (length >= 45) return "ADAPTIVE";
+        if (length >= 30 && questionCount >= 10) return "ADAPTIVE";
+        if (length >= 30) return "HARD";
+        if (length >= 15 && questionCount >= 8) return "HARD";
+        if (length >= 15 && questionCount >= 5) return "MEDIUM";
+        if (length >= 10 && questionCount >= 5) return "MEDIUM";
+        return "EASY";
     }
 }

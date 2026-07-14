@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soham.aiinterviewcoach.dto.ai.*;
 import com.soham.aiinterviewcoach.entity.SessionQna;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GeminiService {
@@ -50,9 +52,10 @@ public class GeminiService {
         try {
             return objectMapper.readValue(sanitizeJson(raw), JobAnalysisResponse.class);
         } catch (Exception e) {
+            log.error("Failed to parse AI job analysis response. Raw response: {}", raw, e);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Failed to parse AI job analysis response"
+                    "Failed to parse AI job analysis response", e
             );
         }
     }
@@ -81,6 +84,7 @@ public class GeminiService {
                 {
                     "questions": [
                         {
+                            "questionNumber": 1,
                             "topic": "TOPIC_TAG",
                             "questionText": "Your question here?"
                         }
@@ -107,9 +111,10 @@ public class GeminiService {
         try {
             return objectMapper.readValue(sanitizeJson(raw), InterviewQuestionsResponse.class);
         } catch (Exception e) {
+            log.error("Failed to parse AI question generation response. Raw response: {}", raw, e);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Failed to parse AI question generation response"
+                    "Failed to parse AI question generation response", e
             );
         }
     }
@@ -169,9 +174,10 @@ public class GeminiService {
         try {
             return objectMapper.readValue(sanitizeJson(raw), MetricEvaluationResponse.class);
         } catch (Exception e) {
+            log.error("Failed to parse AI evaluation response. Raw response: {}", raw, e);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Failed to parse AI evaluation response"
+                    "Failed to parse AI evaluation response", e
             );
         }
     }
@@ -213,9 +219,10 @@ public class GeminiService {
         try {
             return objectMapper.readValue(sanitizeJson(raw), FinalReportResponse.class);
         } catch (Exception e) {
+            log.error("Failed to parse AI final report response. Raw response: {}", raw, e);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Failed to parse AI final report response"
+                    "Failed to parse AI final report response", e
             );
         }
     }
@@ -224,15 +231,48 @@ public class GeminiService {
     // PRIVATE UTILITIES
     // ============================================================
     private String callGemini(String systemPrompt, String userPrompt) {
-        ChatClient chatClient = chatClientBuilder
-                .defaultSystem(systemPrompt)
-                .build();
+        try {
+            log.debug("Calling Gemini with system prompt length: {}, user prompt length: {}",
+                    systemPrompt.length(), userPrompt.length());
 
-        return chatClient
-                .prompt()
-                .user(userPrompt)
-                .call()
-                .content();
+            ChatClient chatClient = chatClientBuilder
+                    .defaultSystem(systemPrompt)
+                    .build();
+
+            String response = chatClient
+                    .prompt()
+                    .user(userPrompt)
+                    .call()
+                    .content();
+
+            log.debug("Gemini response received, length: {}", response != null ? response.length() : "null");
+            return response;
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+            // Check if the root cause is a rate limit or quota exceeded
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                if (cause.getMessage() != null && cause.getMessage().contains("429")) {
+                    errorMessage = "Gemini API Quota Exceeded. Please check your rate limits.";
+                    status = HttpStatus.TOO_MANY_REQUESTS;
+                    break;
+                }
+                cause = cause.getCause();
+            }
+
+            if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
+                errorMessage = "Gemini API call failed: " + errorMessage;
+            }
+
+            log.error("Gemini API call failed. Exception type: {}, Message: {}",
+                    e.getClass().getSimpleName(), e.getMessage(), e);
+            throw new ResponseStatusException(
+                    status,
+                    errorMessage, e
+            );
+        }
     }
 
     private String sanitizeJson(String raw) {

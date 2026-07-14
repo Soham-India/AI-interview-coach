@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar/Navbar";
 import FadeInSection from "../components/ui/FadeInSection";
 import AnalyticsHeroView from "../components/analytics/AnalyticsHeroView";
-import AnalyticsSkillsView from "../components/analytics/AnalyticsSkillsView";
-import AnalyticsDistributionView from "../components/analytics/AnalyticsDistributionView";
 import AnalyticsInsightsView from "../components/analytics/AnalyticsInsightsView";
 import AnalyticsVerdictView from "../components/analytics/AnalyticsVerdictView";
+import AnalyticsSkillsView from "../components/analytics/AnalyticsSkillsView";
+import AnalyticsDistributionView from "../components/analytics/AnalyticsDistributionView";
 import { analyticsService } from "../services/analyticsService";
 
 const AnalyticsDashboard = () => {
-
     const [summary, setSummary] = useState(null);
     const [skills, setSkills] = useState(null);
     const [distribution, setDistribution] = useState([]);
@@ -20,31 +19,24 @@ const AnalyticsDashboard = () => {
         const fetchAnalytics = async () => {
             setIsLoading(true);
             setError(null);
-
             try {
                 const [summaryData, skillsData, distributionData] = await Promise.all([
                     analyticsService.getSummary(),
                     analyticsService.getSkills(),
                     analyticsService.getDistribution(),
                 ]);
-
                 setSummary(summaryData);
                 setSkills(skillsData);
                 setDistribution(distributionData);
-
             } catch (err) {
-                setError(
-                    err.response?.data?.message || "Failed to load analytics."
-                );
+                setError(err.response?.data?.message || "Failed to load analytics.");
             } finally {
                 setIsLoading(false);
             }
         };
-
         fetchAnalytics();
     }, []);
 
-    // ── Loading ──────────────────────────────────────────────────
     if (isLoading) {
         return (
             <div className="w-full h-screen bg-abyss flex items-center justify-center">
@@ -58,20 +50,14 @@ const AnalyticsDashboard = () => {
         );
     }
 
-    // ── Error ────────────────────────────────────────────────────
     if (error) {
         return (
             <div className="w-full h-screen bg-abyss flex items-center justify-center">
-                <div className="text-center space-y-4">
-                    <p className="font-mono text-sm text-danger uppercase tracking-wider">
-                        ⚠ {error}
-                    </p>
-                </div>
+                <p className="font-mono text-sm text-danger uppercase tracking-wider">⚠ {error}</p>
             </div>
         );
     }
 
-    // ── Empty state ──────────────────────────────────────────────
     if (summary?.totalInterviews === 0) {
         return (
             <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative">
@@ -89,7 +75,6 @@ const AnalyticsDashboard = () => {
         );
     }
 
-    // ── Build data shapes expected by child components ───────────
     const heroData = {
         totalInterviews: summary.totalInterviews,
         averageScore: summary.averageScore,
@@ -112,8 +97,6 @@ const AnalyticsDashboard = () => {
 
     return (
         <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative selection:bg-neon-blue selection:text-abyss">
-
-            {/* Background */}
             <div className="absolute inset-0 wireframe-grid opacity-20 pointer-events-none z-0" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#050b14_95%)] pointer-events-none z-0" />
 
@@ -121,28 +104,28 @@ const AnalyticsDashboard = () => {
 
             <main className="h-[calc(100vh-4.5rem)] w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth mt-18 relative z-10">
 
-                {/* VIEWPORT 1: Hero metrics + timeline */}
+                {/* VIEWPORT 1: Hero metrics + timeline chart */}
                 <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
                     <FadeInSection className="w-full">
                         <AnalyticsHeroView data={heroData} />
                     </FadeInSection>
                 </section>
 
-                {/* VIEWPORT 2: Skill breakdown */}
-                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
-                    <FadeInSection className="w-full">
+                {/* VIEWPORT 2: Skills */}
+                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge py-4 flex flex-col justify-center">
+                    <FadeInSection className="w-full h-full flex flex-col justify-center">
                         <AnalyticsSkillsView skills={skillsData} />
                     </FadeInSection>
                 </section>
 
-                {/* VIEWPORT 3: Topic distribution */}
-                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
-                    <FadeInSection className="w-full">
+                {/* VIEWPORT 3: Distribution */}
+                <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge py-4 flex flex-col justify-center">
+                    <FadeInSection className="w-full h-full flex flex-col justify-center">
                         <AnalyticsDistributionView distribution={distribution} />
                     </FadeInSection>
                 </section>
 
-                {/* VIEWPORT 4: AI Insights */}
+                {/* VIEWPORT 3: AI Insights */}
                 <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always max-w-7xl mx-auto px-margin-edge flex flex-col justify-center py-4">
                     <FadeInSection className="w-full">
                         <AnalyticsInsightsView
@@ -152,7 +135,7 @@ const AnalyticsDashboard = () => {
                     </FadeInSection>
                 </section>
 
-                {/* VIEWPORT 5: Verdict CTA */}
+                {/* VIEWPORT 4: Verdict CTA */}
                 <section className="h-[calc(100vh-4.5rem)] w-full flex-shrink-0 snap-start snap-always relative">
                     <FadeInSection className="w-full h-full">
                         <AnalyticsVerdictView />
@@ -164,4 +147,4 @@ const AnalyticsDashboard = () => {
     );
 };
 
-export default AnalyticsDashboard;
+export default AnalyticsDashboard;

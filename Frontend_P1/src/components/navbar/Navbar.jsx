@@ -101,10 +101,10 @@ const Navbar = ({
                                 <img
                                     alt={currentUser?.name}
                                     src={currentUser.avatarUrl}
-                                    className="w-4 h-4 rounded-full object-cover grayscale border border-neon-blue/20 shrink-0"
+                                    className="w-8 h-8 rounded-full object-cover border border-neon-blue/20 shrink-0"
                                 />
                             ) : (
-                                <div className="w-4 h-4 rounded-full bg-neon-blue/20 border border-neon-blue/40 shrink-0 flex items-center justify-center text-[8px] text-neon-blue font-black">
+                                <div className="w-8 h-8 rounded-full bg-neon-blue/20 border border-neon-blue/40 shrink-0 flex items-center justify-center text-[10px] text-neon-blue font-black">
                                     {/* Fix 3: Fully safe optional chain */}
                                     {currentUser?.name?.charAt(0)?.toUpperCase() ?? "?"}
                                 </div>

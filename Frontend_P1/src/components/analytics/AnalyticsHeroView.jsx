@@ -103,28 +103,33 @@ const AnalyticsHeroView = ({ data }) => {
               fill="none"
               stroke="#0088FF"
               strokeWidth="4"
-              points="0,320 250,260 500,240 750,210 1000,160"
+              points={data.timelinePoints.map(p => `${p.x},${p.y}`).join(" ")}
               className="drop-shadow-[0_0_12px_rgba(0,136,255,0.7)]"
             />
             {/* Coordinate Connection Keyframes */}
-            <circle cx="0" cy="320" fill="#0088FF" r="6" />
-            <circle cx="250" cy="260" fill="#0088FF" r="6" />
-            <circle cx="500" cy="240" fill="#0088FF" r="6" />
-            <circle cx="750" cy="210" fill="#0088FF" r="6" />
-            <circle cx="1000" cy="160" fill="#0088FF" r="8" className="animate-pulse" />
-          </svg>
-
-          {/* Graphical Data Timeline Labels Mapping */}
-          <div className="absolute inset-x-0 bottom-3 flex justify-between items-end px-4 font-mono text-[9px] text-steel select-none pointer-events-none font-bold">
             {data.timelinePoints.map((point, index) => (
-              <span 
-                key={index} 
-                className={index === data.timelinePoints.length - 1 ? "text-neon-blue" : ""}
-              >
-                {point.label} ({point.score}%)
-              </span>
+              <circle 
+                key={index}
+                cx={point.x} 
+                cy={point.y} 
+                fill="#0088FF" 
+                r={index === data.timelinePoints.length - 1 ? "8" : "6"} 
+                className={index === data.timelinePoints.length - 1 ? "animate-pulse" : ""}
+              />
             ))}
-          </div>
+          </svg>
+        </div>
+
+        {/* Graphical Data Timeline Labels Mapping */}
+        <div className="mt-3 flex justify-between items-center w-full font-mono text-[9px] text-steel select-none pointer-events-none font-bold">
+          {data.timelinePoints.map((point, index) => (
+            <span 
+              key={index} 
+              className={index === data.timelinePoints.length - 1 ? "text-neon-blue" : ""}
+            >
+              {point.label} ({point.score}%)
+            </span>
+          ))}
         </div>
       </div>
 

@@ -66,6 +66,7 @@ public class InterviewService {
         InterviewSession savedSession = interviewSessionRepository.save(session);
 
         int questionCount = request.questionCount() != null ? request.questionCount() : 5;
+        log.info("Starting interview with questionCount: {}", questionCount);
 
         // Fetch questions to build the initial full response payload
         InterviewQuestionsResponse questionsResponse = geminiService.generateInterviewQuestions(
@@ -81,17 +82,18 @@ public class InterviewService {
         }
 
         // Save all questions
-        List<SessionQna> qnaList = new java.util.ArrayList<>();
-        int qNum = 1;
-        for (var q : questionsResponse.questions()) {
-            if (qNum > questionCount) break;
-            SessionQna qna = new SessionQna();
-            qna.setSession(savedSession);
-            qna.setQuestionNumber(qNum++);
-            qna.setTopic(q.topic());
-            qna.setQuestionText(q.questionText());
-            qnaList.add(qna);
-        }
+        List<SessionQna> qnaList = questionsResponse.questions()
+                .stream()
+                .limit(questionCount)
+                .map(q -> {
+                    SessionQna qna = new SessionQna();
+                    qna.setSession(savedSession);
+                    qna.setQuestionNumber(q.questionNumber() != null ? q.questionNumber() : 1);
+                    qna.setTopic(q.topic());
+                    qna.setQuestionText(q.questionText());
+                    return qna;
+                })
+                .toList();
 
         sessionQnaRepository.saveAll(qnaList);
 

@@ -23,9 +23,9 @@ public class UserPreferences {
     @Column(name = "interview_length")
     private Integer interviewLength = 10;
 
-    @Column(length = 20)
-    private String difficulty = "ADAPTIVE";
+    @Column(name = "question_count")
+    private Integer questionCount = 5;
 
     @Column(length = 20)
-    private String theme = "CYBER";
+    private String difficulty = "ADAPTIVE";
 }

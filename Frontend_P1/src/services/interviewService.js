@@ -3,7 +3,7 @@ import api from './api';
 export const interviewService = {
 
     //need changes in the question count later
-    start: async (jobProfileId, questionCount = 5) => {
+    start: async (jobProfileId, questionCount = 2) => {
         const response = await api.post('/api/users/me/interviews/start', {
             jobProfileId,
             questionCount,

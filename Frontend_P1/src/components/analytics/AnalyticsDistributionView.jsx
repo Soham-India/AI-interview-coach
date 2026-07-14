@@ -36,26 +36,45 @@ const AnalyticsDistributionView = ({ distribution = [] }) => {
           </h3>
         </div>
 
-        <div className="space-y-4">
-          {distributionData.map((item, idx) => (
-            <div 
-              key={idx} 
-              className="flex items-center justify-between border border-frame/50 bg-abyss/40 p-4 hover:bg-neon-blue/5 transition-colors duration-300 group/row"
-            >
-              <div className="flex flex-col">
-                <span className="font-mono text-xs text-steel group-hover/row:text-pure-white transition-colors font-bold tracking-wider">
-                  {item.sector}
-                </span>
-                <span className="font-mono text-[9px] text-steel/40 uppercase mt-0.5">
-                  Allocation: {item.ratio}
+        <div className="flex-1 overflow-y-auto no-scrollbar space-y-2 pr-1"
+             style={{ maxHeight: "calc(100vh - 18rem)" }}>
+          {distributionData.length > 0 ? (
+            distributionData.map((item, idx) => (
+              <div 
+                key={idx} 
+                className="flex items-center justify-between border border-frame/50 bg-abyss/40 px-4 py-3 hover:bg-neon-blue/5 hover:border-neon-blue/20 transition-colors duration-300 group/row"
+              >
+                <div className="flex flex-col min-w-0 flex-1 mr-4">
+                  <span className="font-mono text-xs text-steel group-hover/row:text-pure-white transition-colors font-bold tracking-wider truncate">
+                    {item.sector}
+                  </span>
+                  <div className="mt-1.5 h-1 w-full bg-frame/40 relative overflow-hidden">
+                      <div
+                          className="h-full bg-neon-blue/40 transition-all duration-1000"
+                          style={{ width: item.ratio }}
+                      />
+                  </div>
+                  <span className="font-mono text-[8px] text-steel/40 uppercase mt-0.5">
+                    ALLOCATION: {item.ratio}
+                  </span>
+                </div>
+                <span className="font-mono text-xl text-pure-white font-black tracking-tighter shrink-0">
+                  {item.count < 10 ? `0${item.count}` : item.count}
                 </span>
               </div>
-              <span className="font-mono text-xl md:text-2xl text-pure-white font-black tracking-tighter">
-                {item.count < 10 ? `0${item.count}` : item.count}
-              </span>
+            ))
+          ) : (
+            <div className="text-center p-8 border border-dashed border-frame font-mono text-xs text-steel/50 uppercase">
+                // NO TOPIC DATA AVAILABLE
             </div>
-          ))}
+          )}
         </div>
+        
+        {distributionData.length > 6 && (
+            <div className="flex-shrink-0 pt-2 font-mono text-[9px] text-steel/30 uppercase tracking-widest text-center select-none">
+                ↕ SCROLL TO VIEW ALL {distributionData.length} TOPICS
+            </div>
+        )}
       </div>
 
       {/* RIGHT COLUMN: OPTIMIZATION DELTAS */}

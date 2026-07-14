@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RefreshCw } from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
@@ -15,8 +15,16 @@ import { resetInterview } from "../redux/features/interviewSlice";
 const ReportDashboard = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { sessionId: urlSessionId } = useParams();
 
-    const { sessionId } = useSelector((state) => state.interview);
+    // Redux session ID (active interview)
+    const reduxSessionId = useSelector((state) => state.interview.sessionId);
+
+    // Use URL param if present, otherwise fall back to Redux
+    const sessionId = urlSessionId ? parseInt(urlSessionId) : reduxSessionId;
+
+    // Detect if viewing from archive
+    const isArchiveView = !!urlSessionId;
 
     const [report, setReport] = useState(null);
     const [sessionDetail, setSessionDetail] = useState(null);
@@ -134,7 +142,7 @@ const ReportDashboard = () => {
     }
 
     return (
-        <div className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative">
+        <div id="report-root" className="w-full h-screen bg-abyss text-pure-white overflow-hidden relative">
 
             {/* Background */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(26,36,54,0.15)_0%,#050b14_100%)] overflow-hidden pointer-events-none z-0" />
@@ -186,9 +194,24 @@ const ReportDashboard = () => {
                     <FadeInSection className="w-full">
                         <TacticalObjectivesView
                             recommendations={report.recommendations}
+                            sessionId={sessionId}
+                            reportData={{
+                                overallScore: report.overallScore,
+                                probability: report.probability,
+                                risk: report.risk,
+                                executiveSummary: report.executiveSummary,
+                                strengths: report.strengths,
+                                weaknesses: report.weaknesses,
+                                transcript: sessionDetail.transcript,
+                            }}
+                            isArchiveView={isArchiveView}
                             onNewInterview={() => {
-                                dispatch(resetInterview());
-                                navigate("/initialize");
+                                if (isArchiveView) {
+                                    navigate("/archive");
+                                } else {
+                                    dispatch(resetInterview());
+                                    navigate("/initialize");
+                                }
                             }}
                         />
                     </FadeInSection>

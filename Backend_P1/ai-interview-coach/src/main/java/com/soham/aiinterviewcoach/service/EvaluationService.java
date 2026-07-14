@@ -166,15 +166,39 @@ public class EvaluationService {
                 .findBySessionIdOrderByQuestionNumberAsc(sessionId);
 
         List<SessionQna> answeredQnas = qnaList.stream()
-                .filter(q -> q.getUserAnswer() != null)
+                .filter(q -> q.getUserAnswer() != null 
+                       && !q.getUserAnswer().isBlank())
                 .toList();
 
-        if (answeredQnas.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "No answers submitted for this session"
-            );
-        }
+        // Mark unanswered questions explicitly
+        qnaList.stream()
+                .filter(q -> q.getUserAnswer() == null)
+                .forEach(q -> {
+                    q.setUserAnswer("UNANSWERED");
+                    q.setVerdict("NOT_ATTEMPTED");
+                    q.setOverallScore(BigDecimal.ZERO);
+                    sessionQnaRepository.save(q);
+                });
 
+        if (answeredQnas.isEmpty()) {
+            // No answers at all — still generate a report
+            session.setOverallScore(0);
+            session.setProbability("LOW_CONF");
+            session.setRisk("HIGH_RISK");
+            session.setStatus("COMPLETED");
+            interviewSessionRepository.save(session);
+
+            Report report = new Report();
+            report.setSession(session);
+            report.setExecutiveSummary("Session was terminated before any questions were answered.");
+            report.setStrengths("None identified");
+            report.setWeaknesses("No responses recorded");
+            report.setRecommendations("Complete a full interview session for accurate assessment");
+            reportRepository.save(report);
+
+            return new FinalReportDTO(sessionId, 0, "LOW_CONF", "HIGH_RISK",
+                    "Session terminated without answers.", List.of(), List.of(), List.of());
+        }
 
         // Compute overall score as average of per-question scores  
         BigDecimal overallScore = answeredQnas.stream()

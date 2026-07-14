@@ -7,6 +7,7 @@ const initialState = {
   sessionId: null,
   questions: [],
   currentQuestionIndex: 0,
+  interviewLengthMinutes: 10,
 };
 
 const interviewSlice = createSlice({
@@ -20,6 +21,7 @@ const interviewSlice = createSlice({
       state.sessionId = action.payload.sessionId;
       state.questions = action.payload.questions;
       state.currentQuestionIndex = 0;
+      state.interviewLengthMinutes = action.payload.interviewLengthMinutes || 10;
     },
     resetInterview: (state) => {
       state.isInitialized = false;
@@ -28,6 +30,7 @@ const interviewSlice = createSlice({
       state.sessionId = null;
       state.questions = [];
       state.currentQuestionIndex = 0;
+      state.interviewLengthMinutes = 10;
     },
   },
 });

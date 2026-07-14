@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { CheckCircle2, AlertTriangle, Rocket, Eye, CreditCard, Terminal } from "lucide-react";
 
 // Helper map to swap out context icons based on target companies dynamically
@@ -10,8 +11,15 @@ const ICON_MAP = {
 };
 
 const VaultNode = ({ log }) => {
+  const navigate = useNavigate();
   const isCompleted = log.status === "COMPLETED";
   const bgIcon = ICON_MAP[log.company.toLowerCase()] || ICON_MAP.default;
+
+  const handleClick = () => {
+    if (isCompleted) {
+      navigate(`/report/${log.id}`);
+    }
+  };
 
   return (
     <div className="relative w-full group select-none [perspective:1200px]">
@@ -28,10 +36,14 @@ const VaultNode = ({ log }) => {
 
       {/* 3D PRESSED VAULT PANEL */}
       <div 
+        onClick={handleClick}
         className={`ml-12 md:ml-24 bg-panel/80 border border-frame p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center relative overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] backdrop-blur-md
           hover:border-neon-blue hover:shadow-[0_0_40px_rgba(0,136,255,0.25)] 
           hover:[transform:translateZ(50px)_scale(1.02)]
-          ${isCompleted ? "opacity-100" : "opacity-60 hover:opacity-100"}
+          ${isCompleted 
+            ? "opacity-100 cursor-pointer" 
+            : "opacity-60 hover:opacity-100 cursor-not-allowed"
+          }
         `}
       >
         {/* Left side vertical status glow tracker */}
@@ -72,6 +84,13 @@ const VaultNode = ({ log }) => {
         <div className={`absolute right-0 top-0 opacity-5 group-hover:opacity-15 transition-all duration-700 pointer-events-none select-none text-neon-blue ${isCompleted ? "text-neon-blue" : "text-warning"}`}>
           {bgIcon}
         </div>
+
+        {/* VIEW REPORT hint on hover for completed sessions */}
+        {isCompleted && (
+          <div className="absolute bottom-3 right-4 font-mono text-[9px] text-neon-blue/0 group-hover:text-neon-blue/60 tracking-widest uppercase transition-all duration-500 select-none pointer-events-none font-bold">
+            CLICK TO VIEW REPORT →
+          </div>
+        )}
 
       </div>
     </div>

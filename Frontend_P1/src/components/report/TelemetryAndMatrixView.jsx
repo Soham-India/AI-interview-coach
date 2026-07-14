@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { CheckCircle, AlertTriangle } from "lucide-react";
 
 const SKILLS_DATA = [
@@ -10,6 +10,9 @@ const SKILLS_DATA = [
 
 
 const TelemetryAndMatrixView = ({ strengths = [], weaknesses = [] }) => {
+  const [expandedStrength, setExpandedStrength] = useState(null);
+  const [expandedVuln, setExpandedVuln] = useState(null);
+
   return (
     <div className="w-full h-full flex flex-col justify-between py-2 space-y-8 xl:space-y-12">
       
@@ -60,17 +63,20 @@ const TelemetryAndMatrixView = ({ strengths = [], weaknesses = [] }) => {
             <CheckCircle size={14} className="mr-2 text-neon-blue" strokeWidth={2.5} /> 
             STRENGTH_NODES
           </h4>
-          <ul className="space-y-2.5">
+          <div className="space-y-2.5 max-h-[280px] overflow-y-auto brutalist-scroll pr-1">
             {strengths.map((strength, idx) => (
               <li 
-                key={idx} 
-                className="font-mono text-sm border border-frame bg-abyss/40 p-3.5 flex justify-between items-center group-hover:border-neon-blue/30 transition-colors duration-300"
+                key={idx}
+                onClick={() => setExpandedStrength(expandedStrength === idx ? null : idx)}
+                className="font-mono text-sm border border-frame bg-abyss/40 p-3.5 flex justify-between items-start gap-4 cursor-pointer group-hover:border-neon-blue/30 transition-colors duration-300 list-none"
               >
-                <span className="text-pure-white uppercase text-xs tracking-wide">{strength}</span>
-                <span className="text-neon-blue text-xs font-black select-none">[ + ]</span>
+                <span className="text-pure-white uppercase text-xs tracking-wide leading-relaxed break-words min-w-0">{strength}</span>
+                <span className="text-neon-blue text-xs font-black select-none shrink-0 ml-4">
+                  {expandedStrength === idx ? "[ - ]" : "[ + ]"}
+                </span>
               </li>
             ))}
-          </ul>
+          </div>
         </div>
 
         {/* EXPOSED VULNERABILITIES */}
@@ -79,17 +85,20 @@ const TelemetryAndMatrixView = ({ strengths = [], weaknesses = [] }) => {
             <AlertTriangle size={14} className="mr-2 text-warning" strokeWidth={2.5} /> 
             EXPOSED_VULNS
           </h4>
-          <ul className="space-y-2.5">
+          <div className="space-y-2.5 max-h-[280px] overflow-y-auto brutalist-scroll pr-1">
             {weaknesses.map((vuln, idx) => (
               <li 
-                key={idx} 
-                className="font-mono text-sm border border-frame bg-abyss/40 p-3.5 flex justify-between items-center group-hover:border-warning/30 transition-colors duration-300"
+                key={idx}
+                onClick={() => setExpandedVuln(expandedVuln === idx ? null : idx)}
+                className="font-mono text-sm border border-frame bg-abyss/40 p-3.5 flex justify-between items-start gap-4 cursor-pointer group-hover:border-warning/30 transition-colors duration-300 list-none"
               >
-                <span className="text-pure-white uppercase text-xs tracking-wide">{vuln}</span>
-                <span className="text-warning text-xs font-black select-none">[ ! ]</span>
+                <span className="text-pure-white uppercase text-xs tracking-wide leading-relaxed break-words min-w-0">{vuln}</span>
+                <span className="text-warning text-xs font-black select-none shrink-0 ml-4">
+                  {expandedVuln === idx ? "[ - ]" : "[ ! ]"}
+                </span>
               </li>
             ))}
-          </ul>
+          </div>
         </div>
 
       </div>

@@ -20,9 +20,12 @@ const SimulationChamber = () => {
     const dispatch = useDispatch();
 
     // Pull everything from Redux — set by Initialization.jsx
-    const { sessionId, questions, jobTitle } = useSelector(
+    const { sessionId, questions, jobTitle, interviewLengthMinutes } = useSelector(
         (state) => state.interview
     );
+
+    // Convert minutes to seconds
+    const maxSeconds = interviewLengthMinutes * 60;
 
     // ── Local state ──────────────────────────────────────────────
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -64,6 +67,46 @@ const SimulationChamber = () => {
             clearInterval(elapsedSyncRef.current);
         };
     }, [sessionId]);
+
+    // Auto-submit when timer expires
+    useEffect(() => {
+        if (seconds >= maxSeconds && maxSeconds > 0 && !isCompleting) {
+            handleAutoComplete();
+        }
+    }, [seconds, maxSeconds]);
+
+    const handleAutoComplete = async () => {
+        if (isCompleting) return;
+        setIsCompleting(true);
+        dispatch(startLoading());
+
+        try {
+            // Submit current answer if user was mid-typing
+            if (response.trim().length >= 3 && !submittedIndexes.has(currentIndex)) {
+                try {
+                    await evaluationService.submitAnswer(
+                        sessionId,
+                        currentQuestion.id,
+                        response.trim()
+                    );
+                    setSubmittedIndexes(prev => new Set([...prev, currentIndex]));
+                } catch {
+                    // continue even if this fails
+                }
+            }
+
+            // Complete session — unanswered questions stay null in DB
+            // Backend handles partial reports correctly
+            await evaluationService.complete(sessionId);
+            navigate("/report");
+
+        } catch (err) {
+            setError("Auto-submission failed. Please submit manually.");
+            setIsCompleting(false);
+        } finally {
+            dispatch(stopLoading());
+        }
+    };
 
     // ── Guard — redirect if no session ──────────────────────────
     useEffect(() => {
@@ -238,6 +281,10 @@ const SimulationChamber = () => {
     const isLastQuestion = currentIndex === totalQuestions - 1;
     const isCurrentSubmitted = submittedIndexes.has(currentIndex);
 
+    const timeRemaining = maxSeconds - seconds;
+    const isWarning = timeRemaining <= 120 && timeRemaining > 0;
+    const isExpiring = timeRemaining <= 30 && timeRemaining > 0;
+
     return (
         <div className="w-full h-screen bg-abyss flex flex-col overflow-hidden relative select-none">
 
@@ -267,6 +314,19 @@ const SimulationChamber = () => {
                     {error && (
                         <div className="mb-4 border border-danger/40 bg-danger/10 px-4 py-2 font-mono text-xs text-danger uppercase tracking-wider text-center">
                             ⚠ {error}
+                        </div>
+                    )}
+
+                    {isWarning && (
+                        <div className={`mb-4 border px-4 py-2 font-mono text-xs uppercase tracking-wider text-center transition-all duration-300
+                            ${isExpiring
+                                ? "border-danger/60 bg-danger/10 text-danger animate-pulse"
+                                : "border-warning/60 bg-warning/10 text-warning"
+                            }`}>
+                            {isExpiring
+                                ? `⚠ SESSION TERMINATING IN ${timeRemaining}S — SUBMIT NOW`
+                                : `⏱ ${Math.ceil(timeRemaining / 60)} MINUTES REMAINING`
+                            }
                         </div>
                     )}
 
