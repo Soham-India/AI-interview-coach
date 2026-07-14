@@ -37,11 +37,15 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailValidationService emailValidationService;
     private static final SecureRandom RANDOM = new SecureRandom();
 
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
+
+        // Step 1: Validate email format, typos + MX record
+        emailValidationService.validateEmail(request.email());
 
         if (userRepository.existsByEmail(request.email())) {
             throw new ResponseStatusException(

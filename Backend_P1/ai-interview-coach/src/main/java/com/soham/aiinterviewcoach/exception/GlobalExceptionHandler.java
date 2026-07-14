@@ -11,9 +11,11 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import com.soham.aiinterviewcoach.exception.InvalidEmailException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -153,6 +155,18 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
         return build(HttpStatus.NOT_FOUND.value(), "Endpoint not found", request);
+    }
+
+    // ============================================================
+    // 400 BAD REQUEST
+    // Handles InvalidEmailException
+    // ============================================================
+    @ExceptionHandler(InvalidEmailException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidEmail(
+            InvalidEmailException ex,
+            HttpServletRequest request
+    ) {
+        return build(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request);
     }
 
     // ============================================================
