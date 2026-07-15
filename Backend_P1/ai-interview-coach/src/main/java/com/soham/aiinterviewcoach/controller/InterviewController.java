@@ -34,13 +34,7 @@ public class InterviewController {
         return ResponseEntity.ok(interviewService.getInterview(user.getId(), sessionId));
     }
 
-    @PostMapping("/{sessionId}/next-question")
-    public ResponseEntity<QuestionDTO> nextQuestion(
-            @AuthenticationPrincipal AuthenticatedUser user,
-            @PathVariable Long sessionId
-    ) {
-        return ResponseEntity.ok(interviewService.generateNextQuestion(user.getId(), sessionId));
-    }
+
 
     @PatchMapping("/{sessionId}/elapsed-time")
     public ResponseEntity<Void> updateElapsedTime(

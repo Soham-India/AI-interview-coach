@@ -16,12 +16,6 @@ export const interviewService = {
         return response.data;
     },
 
-    getNextQuestion: async (sessionId) => {
-        const response = await api.post(
-            `/api/users/me/interviews/${sessionId}/next-question`
-        );
-        return response.data;
-    },
 
     updateElapsedTime: async (sessionId, seconds) => {
         await api.patch(

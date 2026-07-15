@@ -7,11 +7,13 @@ import {
     AlertTriangle,
     ArrowLeft,
     ArrowRight,
+    ShieldOff,
 } from "lucide-react";
 import Navbar from "../../components/navbar/Navbar";
 import AbortPopup from "../../components/ui/AbortPopup";
 import { resetInterview } from "../../redux/features/interviewSlice";
 import { startLoading, stopLoading } from "../../redux/features/loadingSlice";
+import { selectQuota } from "../../redux/features/quotaSlice";
 import { interviewService } from "../../services/interviewService";
 import { evaluationService } from "../../services/evaluationService";
 
@@ -23,6 +25,7 @@ const SimulationChamber = () => {
     const { sessionId, questions, jobTitle, interviewLengthMinutes } = useSelector(
         (state) => state.interview
     );
+    const { blocked: quotaBlocked } = useSelector(selectQuota);
 
     // Convert minutes to seconds
     const maxSeconds = interviewLengthMinutes * 60;
@@ -330,6 +333,13 @@ const SimulationChamber = () => {
                         </div>
                     )}
 
+                    {quotaBlocked && (
+                        <div className="mb-4 border border-danger/40 bg-danger/10 px-4 py-2 font-mono text-xs text-danger uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                            <ShieldOff size={12} />
+                            AI evaluation unavailable — daily quota exhausted. You may navigate questions but cannot submit answers.
+                        </div>
+                    )}
+
                     {/* Question card */}
                     <div className="bg-panel border-l-4 border-neon-blue p-6 shadow-2xl relative max-h-[35vh] flex flex-col flex-shrink-0">
                         <p className="text-steel font-metadata text-[10px] tracking-[0.3em] mb-2 uppercase font-bold flex-shrink-0">
@@ -340,7 +350,7 @@ const SimulationChamber = () => {
                                 </span>
                             )}
                         </p>
-                        <div className={`flex-1 min-h-0 ${expanded ? 'overflow-y-auto brutalist-scroll pr-2' : 'overflow-hidden'}`}>
+                        <div className={`flex-1 min-h-0 ${expanded || questionLength <= 300 ? 'overflow-y-auto brutalist-scroll pr-2' : 'overflow-hidden'}`}>
                             <h1 className={`text-pure-white ${questionSize} font-black leading-relaxed tracking-tight uppercase`}>
                                 {displayQuestion}
                                 {!expanded && questionLength > 300 && "..."}
@@ -424,7 +434,7 @@ const SimulationChamber = () => {
                         <div className="flex items-center gap-4">
 
                             {/* Submit current answer */}
-                            {!isCurrentSubmitted && response.trim().length >= 5 && (
+                            {!isCurrentSubmitted && response.trim().length >= 5 && !quotaBlocked && (
                                 <button
                                     onClick={handleSubmitAndNext}
                                     disabled={isSubmitting}
@@ -446,7 +456,7 @@ const SimulationChamber = () => {
                             )}
 
                             {/* Complete interview — only on last question after submitting */}
-                            {isLastQuestion && isCurrentSubmitted && (
+                            {isLastQuestion && isCurrentSubmitted && !quotaBlocked && (
                                 <button
                                     onClick={handleComplete}
                                     disabled={isCompleting}

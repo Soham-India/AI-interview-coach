@@ -7,6 +7,7 @@ import { selectIsAuthenticated } from "./redux/features/authSlice";
 import Navbar from "./components/navbar/Navbar";
 import Menu from "./components/navbar/Menu";
 import LoadingPortal from "./components/ui/LoadingPortal";
+import QuotaBanner from "./components/ui/QuotaBanner";
 
 import Landing from "./pages/Landing";
 import Profile from "./pages/Profile";
@@ -35,6 +36,7 @@ const App = () => {
       {isLoading && <LoadingPortal />}
       
       <Navbar />
+      <QuotaBanner />
       <Menu />
       
       <Routes>

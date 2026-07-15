@@ -3,8 +3,9 @@ import authReducer from "./features/authSlice";
 import drawerReducer from "./features/drawerSlice";
 import interviewReducer from "./features/interviewSlice";
 import loadingReducer from "./features/loadingSlice";
-import profileReducer from "./features/profileSlice"; // <-- Add profile map line
-import archiveReducer from "./features/archiveSlice"; // <-- Add archive map line
+import profileReducer from "./features/profileSlice";
+import archiveReducer from "./features/archiveSlice";
+import quotaReducer from "./features/quotaSlice";
 
 // Rehydrate auth state from localStorage on app start
 const preloadedState = {
@@ -22,7 +23,8 @@ export const store = configureStore({
     interview: interviewReducer,
     loading: loadingReducer,
     profile: profileReducer,
-    archive: archiveReducer
+    archive: archiveReducer,
+    quota: quotaReducer,
   },
   preloadedState,
 });

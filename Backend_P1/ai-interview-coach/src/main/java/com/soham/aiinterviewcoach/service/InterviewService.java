@@ -68,12 +68,10 @@ public class InterviewService {
         int questionCount = request.questionCount() != null ? request.questionCount() : 5;
         log.info("Starting interview with questionCount: {}", questionCount);
 
-        // Fetch questions to build the initial full response payload
-        InterviewQuestionsResponse questionsResponse = geminiService.generateInterviewQuestions(
+        // Fetch all questions in one call
+        InterviewQuestionsResponse questionsResponse = geminiService.generateAllQuestions(
                 jobProfile.getJobTitle(),
                 jobProfile.getSkillsRequired(),
-                List.of(), // empty history — fresh session
-                userId,
                 questionCount
         );
 
@@ -111,37 +109,6 @@ public class InterviewService {
     }
 
     // ============================================================
-    // 3. GENERATE NEXT QUESTION (Called manually or via EvaluationService)
-    // ============================================================
-    @Transactional
-    public QuestionDTO generateNextQuestion(Long userId, Long sessionId) {
-        InterviewSession session = findOwnedInterviewOrThrow(userId, sessionId);
-
-        if (!"IN_PROGRESS".equals(session.getStatus())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot generate questions for an inactive session");
-        }
-
-        List<SessionQna> history = sessionQnaRepository.findBySessionIdOrderByQuestionNumberAsc(sessionId);
-
-        // Guard: Prevent generating a new question if the current active one hasn't been answered yet
-        if (!history.isEmpty()) {
-            SessionQna activeQna = history.get(history.size() - 1);
-            if (activeQna.getUserAnswer() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The active interview question must be answered first.");
-            }
-        }
-
-        SessionQna newQna = generateAndSaveQuestionInternal(session, session.getJobProfile(), userId);
-
-        return new QuestionDTO(
-                newQna.getId(),
-                newQna.getQuestionNumber(),
-                newQna.getTopic(),
-                newQna.getQuestionText()
-        );
-    }
-
-    // ============================================================
     // 4. UPDATE ELAPSED TIME
     // ============================================================
     @Transactional
@@ -169,32 +136,6 @@ public class InterviewService {
     // ============================================================
     // PRIVATE ARCHITECTURAL UTILITIES
     // ============================================================
-    private SessionQna generateAndSaveQuestionInternal(InterviewSession session, JobProfile jobProfile, Long userId) {
-        List<SessionQna> history = sessionQnaRepository.findBySessionIdOrderByQuestionNumberAsc(session.getId());
-
-        // Decoupled AI call: Pass data variables, let GeminiService handle context and preference loading
-        InterviewQuestionsResponse aiResponse = geminiService.generateInterviewQuestions(
-                jobProfile.getJobTitle(),
-                jobProfile.getSkillsRequired(),
-                history,
-                userId,
-                1 // Only generate 1 question when generating next question
-        );
-
-        if (aiResponse.questions() == null || aiResponse.questions().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AI layer returned an empty question sequence.");
-        }
-
-        var incomingQuestion = aiResponse.questions().get(0);
-
-        SessionQna qna = new SessionQna();
-        qna.setSession(session);
-        qna.setQuestionNumber(history.size() + 1);
-        qna.setTopic(incomingQuestion.topic());
-        qna.setQuestionText(incomingQuestion.questionText());
-
-        return sessionQnaRepository.save(qna);
-    }
 
     private InterviewSession findOwnedInterviewOrThrow(Long userId, Long sessionId) {
         InterviewSession session = interviewSessionRepository.findById(sessionId)

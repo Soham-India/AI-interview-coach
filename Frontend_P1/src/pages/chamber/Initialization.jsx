@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Play, Loader2 } from "lucide-react";
+import { Play, Loader2, ShieldOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ParticleBackground from "../../components/ui/elements/ParticleBackground";
 import { setInterviewConfig } from "../../redux/features/interviewSlice";
 import { startLoading, stopLoading } from "../../redux/features/loadingSlice";
+import { selectQuota } from "../../redux/features/quotaSlice";
 import { jobService } from "../../services/jobService";
 import { interviewService } from "../../services/interviewService";
 import { userService } from "../../services/userService";
@@ -12,6 +13,7 @@ import { userService } from "../../services/userService";
 const InitializePortal = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { blocked } = useSelector(selectQuota);
 
     const [questionCount, setQuestionCount] = useState(5);
     const [interviewLength, setInterviewLength] = useState(10);
@@ -37,7 +39,7 @@ const InitializePortal = () => {
     const [error, setError] = useState(null);
 
     const jdLength = jobDesc.length;
-    const isReady = jdLength > 10 && jobTitle.trim().length > 2;
+    const isReady = jdLength > 10 && jobTitle.trim().length > 2 && !blocked;
     const dynamicGlowSize = Math.min(100 + jdLength / 5, 200);
 
     const handleCommence = async () => {
@@ -86,6 +88,14 @@ const InitializePortal = () => {
         <div className={`relative w-full h-screen bg-abyss text-pure-white overflow-hidden transition-colors duration-500 flex flex-col ${isCommencing && !error ? "bg-pure-white" : ""}`}>
 
             <ParticleBackground count={120} />
+
+            {/* Quota exhausted banner */}
+            {blocked && (
+                <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50 border border-danger/40 bg-danger/10 px-6 py-3 font-mono text-xs text-danger uppercase tracking-wider max-w-lg text-center flex items-center gap-3">
+                    <ShieldOff size={14} className="shrink-0" />
+                    AI Interview services are temporarily unavailable because today&apos;s free AI quota has been exhausted. The interview section will automatically become available again after the daily quota resets.
+                </div>
+            )}
 
             {/* Error banner */}
             {error && (
