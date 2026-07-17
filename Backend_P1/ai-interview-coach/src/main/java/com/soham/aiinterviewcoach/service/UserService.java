@@ -79,6 +79,7 @@ public class UserService {
                         ? request.role()
                         : "Candidate"
         );
+        user.setAvatarUrl(request.avatarUrl());
 
         User savedUser = userRepository.save(user);
 

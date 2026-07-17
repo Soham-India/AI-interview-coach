@@ -4,12 +4,11 @@ import { ShieldCheck, Activity, ShieldAlert } from "lucide-react";
 const InitialVerdictView = ({ data }) => {
   return (
     <div className="w-full space-y-8">
-      
       {/* SECTION 1: HEADER TERMINAL (FINAL VERDICT) */}
       <div className="relative border border-frame bg-panel overflow-hidden">
         {/* Dynamic Scanline FX running over the diagnostic header header frame */}
         <div className="absolute top-0 left-0 w-full h-[2px] bg-neon-blue/20 animate-[scan_4s_linear_infinite] z-10 pointer-events-none" />
-        
+
         {/* Brutalist Terminal Chrome Title bar */}
         <div className="bg-frame/30 border-b border-frame px-4 py-2 flex justify-between items-center select-none">
           <div className="flex space-x-1.5">
@@ -44,30 +43,31 @@ const InitialVerdictView = ({ data }) => {
           </div>
 
           {/* Side Telemetry Metric Tags */}
-          <div className="w-full md:w-auto grid grid-cols-3 md:grid-cols-1 gap-4 font-mono">
-            <div className="border border-frame p-3.5 bg-abyss/50 flex flex-col justify-center">
-              <div className="text-[9px] text-steel uppercase mb-1 tracking-wider font-bold flex items-center gap-1.5">
+          <div className="w-full md:w-auto flex flex-col gap-2 md:gap-4 font-mono mt-6 md:mt-0">
+            <div className="border border-frame p-3 md:p-3.5 bg-abyss/50 flex flex-row md:flex-col justify-between md:justify-center items-center md:items-start">
+              <div className="text-[9px] text-steel uppercase md:mb-1 tracking-wider font-bold flex items-center gap-1.5">
                 <ShieldCheck size={10} className="text-success" /> AUTH_STATUS
               </div>
-              <div className="text-base text-success font-black tracking-widest">
+              <div className="text-xs sm:text-sm md:text-base text-success font-black tracking-widest text-right md:text-left">
                 {data.status}
               </div>
             </div>
 
-            <div className="border border-frame p-3.5 bg-abyss/50 flex flex-col justify-center">
-              <div className="text-[9px] text-steel uppercase mb-1 tracking-wider font-bold flex items-center gap-1.5">
+            <div className="border border-frame p-3 md:p-3.5 bg-abyss/50 flex flex-row md:flex-col justify-between md:justify-center items-center md:items-start">
+              <div className="text-[9px] text-steel uppercase md:mb-1 tracking-wider font-bold flex items-center gap-1.5">
                 <Activity size={10} className="text-neon-blue" /> PROBABILITY
               </div>
-              <div className="text-base text-neon-blue font-black tracking-widest">
+              <div className="text-xs sm:text-sm md:text-base text-neon-blue font-black tracking-widest text-right md:text-left">
                 {data.probability}
               </div>
             </div>
 
-            <div className="border border-frame p-3.5 bg-abyss/50 flex flex-col justify-center">
-              <div className="text-[9px] text-steel uppercase mb-1 tracking-wider font-bold flex items-center gap-1.5">
-                <ShieldAlert size={10} className="text-pure-white" /> THREAT_LEVEL
+            <div className="border border-frame p-3 md:p-3.5 bg-abyss/50 flex flex-row md:flex-col justify-between md:justify-center items-center md:items-start">
+              <div className="text-[9px] text-steel uppercase md:mb-1 tracking-wider font-bold flex items-center gap-1.5">
+                <ShieldAlert size={10} className="text-pure-white" />{" "}
+                THREAT_LEVEL
               </div>
-              <div className="text-base text-pure-white font-black tracking-widest">
+              <div className="text-xs sm:text-sm md:text-base text-pure-white font-black tracking-widest text-right md:text-left">
                 {data.risk}
               </div>
             </div>
@@ -85,13 +85,16 @@ const InitialVerdictView = ({ data }) => {
         </div>
         <div className="md:col-span-3 border-l border-frame/40 pl-6 md:pl-8 space-y-4">
           {data.summary.map((paragraph, index) => (
-            <p key={index} className="font-mono text-sm md:text-base text-on-surface leading-relaxed text-justify">
-              <span className="text-neon-blue font-bold mr-2">&gt;</span> {paragraph}
+            <p
+              key={index}
+              className="font-mono text-sm md:text-base text-on-surface leading-relaxed text-justify"
+            >
+              <span className="text-neon-blue font-bold mr-2">&gt;</span>{" "}
+              {paragraph}
             </p>
           ))}
         </div>
       </div>
-
     </div>
   );
 };

@@ -39,6 +39,8 @@ const TacticalObjectivesView = ({
             const checkPageBreak = (neededHeight) => {
                 if (y + neededHeight > pageHeight - margin) {
                     pdf.addPage();
+                    pdf.setFillColor(5, 11, 20);
+                    pdf.rect(0, 0, pageWidth, pageHeight, "F");
                     y = margin;
                 }
             };
@@ -279,11 +281,6 @@ const TacticalObjectivesView = ({
                     pageHeight - 4,
                     { align: "center" }
                 );
-                // Re-fill dark bg on each page
-                if (i > 1) {
-                    pdf.setFillColor(5, 11, 20);
-                    pdf.rect(0, 0, pageWidth, pageHeight - 10, "F");
-                }
             }
 
             const filename = `interview-report-${sessionId || Date.now()}.pdf`;

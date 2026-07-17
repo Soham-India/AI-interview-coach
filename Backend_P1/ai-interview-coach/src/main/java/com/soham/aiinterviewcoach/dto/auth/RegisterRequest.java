@@ -22,6 +22,8 @@ public record RegisterRequest(
         String callsign,
 
         @Size(max = 100)
-        String role
+        String role,
+        
+        String avatarUrl
 ) {
 }

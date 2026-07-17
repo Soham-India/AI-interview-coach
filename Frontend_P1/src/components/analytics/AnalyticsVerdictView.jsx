@@ -30,7 +30,7 @@ const AnalyticsVerdictView = () => {
         <div className="flex justify-center pt-6 animate-[fade-up_1s_ease_forwards_delay-300]">
           <button
             onClick={() => navigate("/initialize")}
-            className="bg-pure-white text-abyss font-mono text-sm md:text-base font-black uppercase tracking-[0.3em] px-12 py-5 border-2 border-pure-white hover:bg-transparent hover:text-pure-white transition-all duration-500 button-cut cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_40px_rgba(0,136,255,0.4)] flex items-center gap-3 group"
+            className="bg-pure-white text-abyss font-mono text-[10px] sm:text-xs md:text-base font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.3em] px-6 sm:px-8 md:px-12 py-4 md:py-5 border-2 border-pure-white hover:bg-transparent hover:text-pure-white transition-all duration-500 button-cut cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_40px_rgba(0,136,255,0.4)] flex items-center justify-center gap-2 md:gap-3 group whitespace-nowrap"
           >
             <PlusCircle size={18} className="group-hover:rotate-90 transition-transform duration-500" strokeWidth={2.5} />
             [ NEW INTERVIEW ]

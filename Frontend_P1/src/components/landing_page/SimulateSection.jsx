@@ -5,7 +5,7 @@ import FadeInSection from "../ui/FadeInSection";
 const SimulateSection = () => {
   return (
     <section className="flex items-center border-b border-frame relative overflow-hidden bg-abyss wireframe-grid h-screen w-full flex-shrink-0 snap-start snap-always">
-      <div className="max-w-container-max mx-auto w-full px-margin-edge grid grid-cols-1 md:grid-cols-2 gap-gutter z-10 items-center">
+      <div className="max-w-container-max mx-auto w-full px-margin-edge grid grid-cols-1 md:grid-cols-2 gap-gutter z-10 items-center pt-20 md:pt-0">
         <div className="order-2 md:order-1 h-[380px] md:h-[550px] xl:h-[614px] border border-frame bg-panel relative overflow-hidden flex items-center justify-center group">
           <div className="absolute inset-0 bg-gradient-to-tr from-panel via-panel to-frame opacity-50 pointer-events-none select-none" />
 

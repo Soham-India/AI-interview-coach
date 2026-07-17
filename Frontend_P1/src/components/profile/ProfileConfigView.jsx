@@ -53,7 +53,7 @@ const ProfileConfigView = ({ preferences, onUpdate }) => {
     };
 
     return (
-        <div className="w-full h-full flex flex-col justify-center space-y-10 xl:space-y-14">
+        <div className="w-full flex flex-col justify-center space-y-6 md:space-y-10 xl:space-y-14 py-4 md:py-0">
 
             {/* Section header */}
             <div className="select-none">
@@ -65,10 +65,10 @@ const ProfileConfigView = ({ preferences, onUpdate }) => {
                 </h2>
             </div>
 
-            <div className="space-y-8 md:space-y-10 max-w-4xl w-full">
+            <div className="space-y-4 sm:space-y-6 md:space-y-10 max-w-4xl w-full">
 
                 {/* ROW 1: Interview Length */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
                     <div className="space-y-1 select-none">
                         <h4 className="font-mono text-base text-pure-white font-black tracking-wide uppercase flex items-center gap-2">
                             <Sliders size={14} className="text-neon-blue" />
@@ -94,7 +94,7 @@ const ProfileConfigView = ({ preferences, onUpdate }) => {
                 <div className="h-px w-full bg-frame/40 select-none pointer-events-none" />
 
                 {/* ROW 2: Question Count */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
                     <div className="space-y-1 select-none">
                         <h4 className="font-mono text-base text-pure-white font-black tracking-wide uppercase flex items-center gap-2">
                             <Hash size={14} className="text-neon-blue" />
@@ -120,7 +120,7 @@ const ProfileConfigView = ({ preferences, onUpdate }) => {
                 <div className="h-px w-full bg-frame/40 select-none pointer-events-none" />
 
                 {/* AUTO-DIFFICULTY DISPLAY */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
                     <div className="space-y-1 select-none">
                         <h4 className="font-mono text-base text-pure-white font-black tracking-wide uppercase flex items-center gap-2">
                             <span className="text-neon-blue text-sm">⚡</span>

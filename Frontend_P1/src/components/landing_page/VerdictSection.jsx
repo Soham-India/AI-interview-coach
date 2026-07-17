@@ -19,7 +19,7 @@ const VerdictSection = () => {
 
       {/* Main content layer wrapped with your active visibility observer */}
       <FadeInSection className="z-10 px-margin-edge text-center max-w-container-max w-full flex flex-col items-center space-y-12">
-        <h2 className="font-hero-score text-hero-score text-pure-white uppercase tracking-tighter leading-[0.8] break-words w-full drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]">
+        <h2 className="font-black text-5xl sm:text-6xl md:text-8xl lg:text-[120px] text-pure-white uppercase tracking-tighter leading-[0.85] break-words w-full drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]">
           RECEIVE THE
           <br />
           VERDICT
@@ -29,14 +29,14 @@ const VerdictSection = () => {
 
         <Link
           to="/initialize"
-          className="bg-pure-white text-abyss font-scene-focus text-2xl md:text-3xl uppercase px-16 py-10 border-2 border-pure-white hover:bg-transparent hover:text-pure-white transition-all duration-500 w-full md:w-auto text-center flex items-center justify-center gap-6 group relative overflow-hidden button-cut cursor-pointer"
+          className="bg-pure-white text-abyss font-scene-focus text-lg sm:text-2xl md:text-3xl uppercase px-8 py-6 sm:px-16 sm:py-10 border-2 border-pure-white hover:bg-transparent hover:text-pure-white transition-all duration-500 w-full md:w-auto text-center flex items-center justify-center gap-4 sm:gap-6 group relative overflow-hidden button-cut cursor-pointer"
         >
           <span className="relative z-10 font-black tracking-wide">
             [ ENTER THE SIMULATOR ]
           </span>
           <ArrowRight
-            size={36}
-            className="group-hover:translate-x-3 transition-transform duration-500 relative z-10 text-current"
+            size={24}
+            className="group-hover:translate-x-3 transition-transform duration-500 relative z-10 text-current sm:w-9 sm:h-9"
             strokeWidth={2}
           />
         </Link>
